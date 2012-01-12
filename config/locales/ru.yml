@@ -1,0 +1,16 @@
+ru:
+  nano_api:
+    form:
+      origin: Город вылета
+      destination: Город назначения
+      depart_date: Дата вылета
+      return_date: Дата обратного вылета
+      trip_class: Класс
+      range: ±3 дня
+      adults: Взрослые
+      children: Дети
+      infants: Младенцы
+      submit: Искать
+    clicks:
+      new:
+        title: Переход на сайт партнера.

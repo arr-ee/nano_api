@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= t '.title' %></title>
+  </head>
+  <body>
+    <%= form_tag @click_form[:url], method: @click_form[:http_method], id: 'nano_api_click_form' do %>
+      <% @click_form[:params].each do |key, value| %>
+        <%= hidden_field_tag key, h(value) %>
+      <% end %>
+    <% end %>
+
+    <script type="text/javascript">
+      //document.getElementById('nano_api_click_form').submit()
+    </script>
+  </body>
+</html>

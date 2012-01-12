@@ -1,0 +1,16 @@
+en:
+  nano_api:
+    form:
+      origin: Origin city
+      destination: Destination city
+      depart_date: Departure date
+      return_date: Return date
+      trip_class: Trip class
+      range: Range
+      adults: Adults
+      children: Children
+      infants: Infants
+      submit: Search
+    clicks:
+      new:
+        title: Redirect to partner site.

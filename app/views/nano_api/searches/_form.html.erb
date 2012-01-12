@@ -1,0 +1,41 @@
+<%= form_tag searches_path, remote: true, data: {nano_api_search: 1} do %>
+  <p>
+    <%= label_tag t('nano_api.form.origin') %>
+    <%= text_field_tag :origin %>
+  </p>
+  <p>
+    <%= label_tag t('nano_api.form.destination') %>
+    <%= text_field_tag :destination %>
+  </p>
+  <p>
+    <%= label_tag t('nano_api.form.depart_date') %>
+    <%= text_field_tag :depart_date %>
+  </p>
+  <p>
+    <%= label_tag t('nano_api.form.return_date') %>
+    <%= text_field_tag :return_date %>
+  </p>
+  <p>
+    <%= label_tag t('nano_api.form.trip_class') %>
+    <%= select_tag :trip_class, options_for_select([0, 1, 2]) %>
+  </p>
+  <p>
+    <%= label_tag t('nano_api.form.range') %>
+    <%= check_box_tag :range %>
+  </p>
+  <p>
+    <%= label_tag t('nano_api.form.adults') %>
+    <%= select_tag :adults, options_for_select((1..8).to_a) %>
+  </p>
+  <p>
+    <%= label_tag t('nano_api.form.children') %>
+    <%= select_tag :children, options_for_select((0..5).to_a) %>
+  </p>
+  <p>
+    <%= label_tag t('nano_api.form.infants') %>
+    <%= select_tag :infants, options_for_select((0..5).to_a) %>
+  </p>
+  <p>
+    <%= submit_tag t('nano_api.form.submit') %>
+  </p>
+<% end %>
