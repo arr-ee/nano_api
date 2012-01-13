@@ -17,8 +17,7 @@ module NanoApi
       )
 
       if search_result.present?
-        response.content_type = Mime::JSON
-        render text: search_result
+        forward_json search_result
       else
         render json: {}
       end

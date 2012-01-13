@@ -1,9 +1,8 @@
 module NanoApi
-  class PlacesController < AplicationController
+  class PlacesController < ApplicationController
     def index
       if complete = Client.auto_complete_places(params[:temp])
-        response.content_type = Mime::JSON
-        render text: complete
+        forward_json complete
       else
         render nothing: true
       end

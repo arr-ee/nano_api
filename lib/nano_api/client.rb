@@ -19,9 +19,9 @@ module NanoApi
 
       def click search_id, order_url_id
         JSON.parse(
-          site["searches/#{search_id}/order_urls/#{order_url_id}.json"].get
+          site["searches/#{search_id}/order_urls/#{order_url_id}.json"].post({})
         ).symbolize_keys
-      rescue RestClient::NotFound
+      rescue RestClient::ResourceNotFound
         nil
       end
 
@@ -29,6 +29,14 @@ module NanoApi
         site['places_ru.json'].get(temp: temp)
       rescue RestClient::BadRequest
         nil
+      end
+
+      def week_minimal_prices search_id, direct_date = nil, return_date = nil
+        site['minimal_prices.json'].get(search_id: search_id, direct_date: direct_date, return_date: return_date)
+      end
+
+      def month_minimal_prices search_id, month = nil
+        site['month_minimal_prices.json'].get(search_id: search_id, month: month)
       end
 
       protected

@@ -4,7 +4,7 @@ describe NanoApi::SearchesController do
   describe 'POST :create' do
     before do
       NanoApi::Client.stub(:search).and_return('{tickets: [{test: 1}, {test: 2}]}')
-      post :create, :use_route => :nano_api
+      post :create, use_route: :nano_api
     end
     
     it 'should be success' do
