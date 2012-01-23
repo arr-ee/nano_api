@@ -1,12 +1,18 @@
 describe("AsyncWorker", function(){
-  var numbers, hashes, work_results, is_complete;
+  var numbers, hashes, work_results, is_complete, hash;
   beforeEach(function(){
     numbers = [1, 5, 100];
     work_results = [];
     hashes = [{field: 1}, {field: 10}, {field: "23"}];
     is_complete = false;
+    hash = {
+      "foo": {value: 10},
+      "bar": {value: 20},
+      "foofoo": {value: 40},
+      "barbar": {value: 50}
+    };
   });
-  it("simple async numbers iteration", function(){
+  it("simple async array numbers iteration", function(){
     NANO.AsyncWorker({
       data: numbers,
       iterator: function(item){
@@ -24,7 +30,7 @@ describe("AsyncWorker", function(){
       expect(work_results).toEqual([2, 10, 200]);
     });
   });
-  it("simple async hashes iteration", function(){
+  it("simple async array hashes iteration", function(){
     NANO.AsyncWorker({
       data: hashes,
       iterator: function(item){
@@ -105,6 +111,47 @@ describe("AsyncWorker", function(){
 
     runs(function(){
       expect(work_results).toEqual(numbers);
+    });
+  });
+
+  it("async hash iteration", function(){
+    NANO.AsyncWorker({
+      data: hash,
+      iterator: function(item, key){
+        return {
+          length: key.length,
+          value: item.value / 2
+        };
+      },
+      complete: function(results){
+        work_results = results;
+        is_complete = true;
+      }
+    });
+
+    waitsFor(function(){
+      return is_complete;
+    });
+
+    runs(function(){
+      expect(work_results).toEqual({
+        "foo": {
+          value: 5,
+          length: 3
+        },
+        "bar": {
+          value: 10, 
+          length: 3,
+        },
+        "foofoo": {
+          value: 20,
+          length: 6,
+        },
+        "barbar": {
+          value: 25,
+          length: 6,
+        }
+      });
     });
   });
 });
