@@ -7,7 +7,7 @@ describe("Ticket", function(){
   });
 
 
-  it("test of airlines", function(){
+  it("airlines", function(){
     var obj = undefined;
     NANO.SearchResultsFabric.create(data_from_server, function (ticets){
       obj = ticets;
@@ -23,7 +23,9 @@ describe("Ticket", function(){
   });
 
 
-  it("test of airports", function(){
+  return false;
+
+  it("airports", function(){
     var obj = undefined;
     NANO.SearchResultsFabric.create(data_from_server, function (ticets){
       obj = ticets;
@@ -39,7 +41,7 @@ describe("Ticket", function(){
   });
 
 
-  it("test of closest cities", function(){
+  it("closest cities", function(){
     var obj = undefined;
     NANO.SearchResultsFabric.create(data_from_server, function (ticets){
       obj = ticets;
@@ -65,7 +67,7 @@ describe("Ticket", function(){
   });
 
 
-  it("test of exchange rates", function(){
+  it("exchange rates", function(){
     var obj = undefined;
     NANO.SearchResultsFabric.create(data_from_server, function (ticets){
       obj = ticets;
@@ -80,7 +82,7 @@ describe("Ticket", function(){
   });
 
 
-  it("test of gates info", function(){
+  it("gates info", function(){
     var obj = undefined;
     NANO.SearchResultsFabric.create(data_from_server, function (ticets){
       obj = ticets;
@@ -101,7 +103,7 @@ describe("Ticket", function(){
 
 
 
-  it("test of minimal prices", function(){
+  it("minimal prices", function(){
     var obj = undefined;
     NANO.SearchResultsFabric.create(data_from_server, function (ticets){
       obj = ticets;
@@ -129,7 +131,7 @@ describe("Ticket", function(){
   });
 
 
-  it("test of params attributes", function(){
+  it("params attributes", function(){
     var obj = undefined;
     NANO.SearchResultsFabric.create(data_from_server, function (ticets){
       obj = ticets;
