@@ -63,14 +63,14 @@ describe("Filter data", function(){
     direct_flight_time: {min: 1324440000, max: 1327440000},
     return_flight_time: {min: 1324565700, max: 1327565700},
     flights_duration: {min: 180, max: 240},
-    stops_airports: ['KGD', 'KGD'],
-    stops_count: ['0', '1'],
+    stops_airports: {'KGD': true, 'ARH': true},
+    stops_count: {'0': true, '1': true},
     stops_duration: {min: 60, max: 120},
-    airlines: ['SU', 'S7'],
-    gates: [10, 16, 20, 24],
-    origin: ['SVO', 'DME', 'VKO'],
-    destination: ['LED'],
-    price: {min: 2000, max: 700}
+    airlines: {'SU': true, 'S7': true},
+    gates: {10: true, 16: true, 20: true, 24: true},
+    origin: {'SVO': true, 'DME': true, 'VKO': true},
+    destination: {'LED': true},
+    price: {min: 2000, max: 7000}
   };
 
 
