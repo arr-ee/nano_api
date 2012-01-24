@@ -1,6 +1,6 @@
 describe("Filter data", function(){
 
-  var tickets, felter_result;
+  var tickets, tickets2, felter_result, felter_result2;
 
   tickets = [
     {
@@ -35,7 +35,7 @@ describe("Filter data", function(){
       flights_duration: 180,
       stops_airports: ['ARH'],
       stops_count: '1',
-      stops_duration: 60,
+      stops_duration: [60],
       airlines: 'SU',
       alliances: ['SkyTeam'],
       gates: [10, 24],
@@ -48,7 +48,7 @@ describe("Filter data", function(){
       flights_duration: 240,
       stops_airports: ['KGD'],
       stops_count: '1',
-      stops_duration: 120,
+      stops_duration: [120],
       airlines: 'S7',
       alliances: ['SkyTeam'],
       gates: [16],
@@ -58,6 +58,61 @@ describe("Filter data", function(){
     }
   ];
 
+  tickets2 = [
+    {
+      direct_flight_time: 1327440000,
+      return_flight_time: 1327565700,
+      flights_duration: 180,
+      stops_airports: [],
+      stops_count: '0',
+      stops_duration: 0,
+      airlines: 'SU',
+      alliances: ['SkyTeam'],
+      gates: [10, 20, 24],
+      origin: 'SVO',
+      destination: 'LED',
+      price: 1000
+    }, {
+      direct_flight_time: 1326440000,
+      return_flight_time: 1326565700,
+      flights_duration: 180,
+      stops_airports: [],
+      stops_count: '0',
+      stops_duration: 0,
+      airlines: 'SU',
+      alliances: ['SkyTeam'],
+      gates: [20, 24],
+      origin: 'DME',
+      destination: 'LED',
+      price: 1000
+    }, {
+      direct_flight_time: 1325440000,
+      return_flight_time: 1325565700,
+      flights_duration: 180,
+      stops_airports: ['ARH'],
+      stops_count: '1',
+      stops_duration: [60],
+      airlines: 'SU',
+      alliances: ['SkyTeam'],
+      gates: [10, 24],
+      origin: 'VKO',
+      destination: 'LED',
+      price: 1000
+    }, {
+      direct_flight_time: 1324440000,
+      return_flight_time: 1324565700,
+      flights_duration: 240,
+      stops_airports: ['KGD'],
+      stops_count: '1',
+      stops_duration: [120],
+      airlines: 'S7',
+      alliances: ['SkyTeam'],
+      gates: [16],
+      origin: 'SVO',
+      destination: 'LED',
+      price: 1000
+    }
+  ];
 
   felter_result = {
     direct_flight_time: {min: 1324440000, max: 1327440000},
@@ -65,12 +120,27 @@ describe("Filter data", function(){
     flights_duration: {min: 180, max: 240},
     stops_airports: {'KGD': true, 'ARH': true},
     stops_count: {'0': true, '1': true},
-    stops_duration: {min: 60, max: 120},
+    stops_duration: {min: 0, max: 120},
     airlines: {'SU': true, 'S7': true},
+    alliances : {'SkyTeam': true},
     gates: {10: true, 16: true, 20: true, 24: true},
     origin: {'SVO': true, 'DME': true, 'VKO': true},
     destination: {'LED': true},
     price: {min: 2000, max: 7000}
+  };
+
+  felter_result2 = {
+    direct_flight_time: {min: 1324440000, max: 1327440000},
+    return_flight_time: {min: 1324565700, max: 1327565700},
+    flights_duration: {min: 180, max: 240},
+    stops_airports: {'KGD': true, 'ARH': true},
+    stops_count: {'0': true, '1': true},
+    stops_duration: {min: 0, max: 120},
+    airlines: {'SU': true, 'S7': true},
+    alliances : {'SkyTeam': true},
+    gates: {10: true, 16: true, 20: true, 24: true},
+    origin: {'SVO': true, 'DME': true, 'VKO': true},
+    destination: {'LED': true}
   };
 
 
@@ -79,6 +149,13 @@ describe("Filter data", function(){
     runs(function(){
       var filter_data = FilterData(tickets);
       expect(filter_data).toEqual(felter_result);
+    });
+  });
+
+  it("make filter data (identical price)", function(){
+    runs(function(){
+      var filter_data = FilterData(tickets2);
+      expect(filter_data).toEqual(felter_result2);
     });
   });
 
