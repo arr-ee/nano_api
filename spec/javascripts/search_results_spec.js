@@ -596,7 +596,7 @@ describe("Search Results Fabric", function(){
     copied_search_json[key] = _.clone(value);
   });
 
-  NANO.SearchResults.create(copied_search_json, function (search_results){
+  NANO.searchResults.create(copied_search_json, function (search_results){
     search_results_1 = search_results;
   });
 

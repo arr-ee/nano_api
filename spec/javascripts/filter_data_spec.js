@@ -166,4 +166,17 @@ describe("Filter data", function(){
     });
   });
 
+  it("filter data calculating time", function(){
+    var test_data_json = [];
+    var all_tickets = tickets.concat(tickets2);
+    _.times(250, function(index){
+      test_data_json.push(all_tickets[index % all_tickets.length || 0]);
+    });
+    console.log(test_data_json);
+    var start_time = +new Date();
+    var filter_data = FilterData(test_data_json);
+    var end_time = +new Date();
+    expect(end_time - start_time).toBeLessThan(40);
+  });
+
 });
