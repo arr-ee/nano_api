@@ -588,6 +588,22 @@ describe("Search Results Fabric", function(){
     }
   };
 
+  var filter_data = {
+    direct_flight_time: 1327403400,
+    return_flight_time: 1327408800,
+    flights_duration: 90,
+    stops_airports: [],
+    stops_count: '0',
+    stops_duration: [0],
+    airlines: 'FV',
+    alliances: [],
+    gates: [20, 11, 10, 16, 28, 9, 24],
+    origin: 'SVO',
+    destination: 'LED',
+    price: 2835
+  };
+
+
   search_results_1 = null;
 
   var copied_search_json = {};
@@ -681,5 +697,16 @@ describe("Search Results Fabric", function(){
       expect(params_attributes).toEqual(search_json_1.params_attributes);
     });
   });
+
+
+
+
+  it("filter data", function(){
+    runs(function(){
+      var ticets = search_results_1.tickets.get();
+      expect(ticets[0].filter_data()).toEqual(filter_data);
+    });
+  });
+
 
 });
