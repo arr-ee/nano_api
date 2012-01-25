@@ -168,7 +168,7 @@ describe("Filter data", function(){
 
   it("filter data calculating time", function(){
     var test_data_json = [];
-    var all_tickets = tickets.concat(tickets2);
+    var all_tickets = tickets_filter_data.concat(tickets_filter_data2);
     _.times(250, function(index){
       test_data_json.push(all_tickets[index % all_tickets.length || 0]);
     });
