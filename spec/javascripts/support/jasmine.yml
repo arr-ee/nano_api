@@ -13,11 +13,13 @@
 src_files:
     - vendor/assets/javascripts/*.js
     - lib/assets/javascripts/nano_api/core.js
+    - lib/assets/javascripts/nano_api/ajax.js
     - lib/assets/javascripts/nano_api/async_worker.js
     - lib/assets/javascripts/nano_api/currency.js
     - lib/assets/javascripts/nano_api/search_results.js
     - lib/assets/javascripts/nano_api/filter.js
-    - lib/assets/javascripts/nano_api/*.js
+    - lib/assets/javascripts/nano_api/sort.js
+    - lib/assets/javascripts/nano_api/filter_data.js
 
 # stylesheets
 #

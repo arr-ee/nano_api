@@ -1,8 +1,8 @@
 describe("Filter data", function(){
 
-  var tickets, tickets2, felter_result, felter_result2;
+  var tickets_filter_data, tickets_filter_data2, felter_result, felter_result2;
 
-  tickets = [
+  tickets_filter_data = [
     {
       direct_flight_time: 1327440000,
       return_flight_time: 1327565700,
@@ -58,7 +58,7 @@ describe("Filter data", function(){
     }
   ];
 
-  tickets2 = [
+  tickets_filter_data2 = [
     {
       direct_flight_time: 1327440000,
       return_flight_time: 1327565700,
@@ -144,24 +144,31 @@ describe("Filter data", function(){
   };
 
 
+  _.each(_.range(98), function (){
+    tickets_filter_data.push(tickets_filter_data[0]);
+    tickets_filter_data.push(tickets_filter_data[1]);
+    tickets_filter_data.push(tickets_filter_data[2]);
+    tickets_filter_data.push(tickets_filter_data[3]);
+  });
+
 
   it("make filter data", function(){
     runs(function(){
-      var filter_data = FilterData(tickets);
+      var filter_data = FilterData(tickets_filter_data);
       expect(filter_data).toEqual(felter_result);
     });
   });
 
   it("make filter data (identical price)", function(){
     runs(function(){
-      var filter_data = FilterData(tickets2);
+      var filter_data = FilterData(tickets_filter_data2);
       expect(filter_data).toEqual(felter_result2);
     });
   });
 
   it("filter data calculating time", function(){
     var test_data_json = [];
-    var all_tickets = tickets.concat(tickets2);
+    var all_tickets = tickets_filter_data.concat(tickets_filter_data2);
     _.times(250, function(index){
       test_data_json.push(all_tickets[index % all_tickets.length || 0]);
     });

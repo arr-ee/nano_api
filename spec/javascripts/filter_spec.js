@@ -183,19 +183,15 @@ describe("Filter", function(){
   };
 
 
-  search_results_1 = null;
-
-  var copied_search_json = {};
-
-  _.each(search_json_1, function(value, key){
-    copied_search_json[key] = _.clone(value);
-  });
-
-  NANO.searchResults.create(copied_search_json, function (search_results){
-    search_results_1 = search_results;
-  });
-
   beforeEach(function(){
+    search_results_1 = null;
+    var copied_search_json = {};
+    _.each(search_json_1, function(value, key){
+      copied_search_json[key] = _.clone(value);
+    });
+    NANO.searchResults.create(copied_search_json, function (search_results){
+      search_results_1 = search_results;
+    });
     waitsFor(function(){
       return search_results_1 !== null;
     });
@@ -204,10 +200,8 @@ describe("Filter", function(){
 
   it("stops_count", function(){
     runs(function(){
-      var tickets1 = search_results_1.tickets.filter({stops_count: 1}).get();
-      var tickets2 = search_results_1.tickets.filter({stops_count: 2}).get();
-      expect(tickets1.length).toEqual(5);
-      expect(tickets2.length).toEqual(4);
+      var tickets = search_results_1.tickets.filter({stops_count: 1}).get();
+      expect(tickets.length).toEqual(4);
     });
   });
 
