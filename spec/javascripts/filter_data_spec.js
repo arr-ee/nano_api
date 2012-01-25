@@ -6,7 +6,7 @@ describe("Filter data", function(){
     {
       direct_flight_time: 1327440000,
       return_flight_time: 1327565700,
-      flights_duration: 180,
+      flights_duration: [180, 120],
       stops_airports: [],
       stops_count: '0',
       stops_duration: 0,
@@ -19,7 +19,7 @@ describe("Filter data", function(){
     }, {
       direct_flight_time: 1326440000,
       return_flight_time: 1326565700,
-      flights_duration: 180,
+      flights_duration: [180, 140],
       stops_airports: [],
       stops_count: '0',
       stops_duration: 0,
@@ -32,7 +32,7 @@ describe("Filter data", function(){
     }, {
       direct_flight_time: 1325440000,
       return_flight_time: 1325565700,
-      flights_duration: 180,
+      flights_duration: [100, 180],
       stops_airports: ['ARH'],
       stops_count: '1',
       stops_duration: [60],
@@ -45,7 +45,7 @@ describe("Filter data", function(){
     }, {
       direct_flight_time: 1324440000,
       return_flight_time: 1324565700,
-      flights_duration: 240,
+      flights_duration: [120, 240],
       stops_airports: ['KGD'],
       stops_count: '1',
       stops_duration: [120],
@@ -62,7 +62,7 @@ describe("Filter data", function(){
     {
       direct_flight_time: 1327440000,
       return_flight_time: 1327565700,
-      flights_duration: 180,
+      flights_duration: [150, 180],
       stops_airports: [],
       stops_count: '0',
       stops_duration: 0,
@@ -75,7 +75,7 @@ describe("Filter data", function(){
     }, {
       direct_flight_time: 1326440000,
       return_flight_time: 1326565700,
-      flights_duration: 180,
+      flights_duration: [90, 180],
       stops_airports: [],
       stops_count: '0',
       stops_duration: 0,
@@ -88,7 +88,7 @@ describe("Filter data", function(){
     }, {
       direct_flight_time: 1325440000,
       return_flight_time: 1325565700,
-      flights_duration: 180,
+      flights_duration: [50, 180],
       stops_airports: ['ARH'],
       stops_count: '1',
       stops_duration: [60],
@@ -101,7 +101,7 @@ describe("Filter data", function(){
     }, {
       direct_flight_time: 1324440000,
       return_flight_time: 1324565700,
-      flights_duration: 240,
+      flights_duration: [190, 240],
       stops_airports: ['KGD'],
       stops_count: '1',
       stops_duration: [120],
@@ -117,7 +117,7 @@ describe("Filter data", function(){
   felter_result = {
     direct_flight_time: {min: 1324440000, max: 1327440000},
     return_flight_time: {min: 1324565700, max: 1327565700},
-    flights_duration: {min: 180, max: 240},
+    flights_duration: {min: 100, max: 240},
     stops_airports: {'KGD': true, 'ARH': true},
     stops_count: {'0': true, '1': true},
     stops_duration: {min: 0, max: 120},
@@ -132,7 +132,7 @@ describe("Filter data", function(){
   felter_result2 = {
     direct_flight_time: {min: 1324440000, max: 1327440000},
     return_flight_time: {min: 1324565700, max: 1327565700},
-    flights_duration: {min: 180, max: 240},
+    flights_duration: {min: 50, max: 240},
     stops_airports: {'KGD': true, 'ARH': true},
     stops_count: {'0': true, '1': true},
     stops_duration: {min: 0, max: 120},
@@ -172,7 +172,6 @@ describe("Filter data", function(){
     _.times(250, function(index){
       test_data_json.push(all_tickets[index % all_tickets.length || 0]);
     });
-    console.log(test_data_json);
     var start_time = +new Date();
     var filter_data = FilterData(test_data_json);
     var end_time = +new Date();
