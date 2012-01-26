@@ -1,4 +1,4 @@
-describe("AsyncWorker", function(){
+describe("asyncWorker", function(){
   var numbers, hashes, work_results, is_complete, hash;
   beforeEach(function(){
     numbers = [1, 5, 100];
@@ -13,7 +13,7 @@ describe("AsyncWorker", function(){
     };
   });
   it("simple async array numbers iteration", function(){
-    NANO.AsyncWorker({
+    NANO.asyncWorker({
       data: numbers,
       iterator: function(item){
         return item * 2;
@@ -31,7 +31,7 @@ describe("AsyncWorker", function(){
     });
   });
   it("simple async array hashes iteration", function(){
-    NANO.AsyncWorker({
+    NANO.asyncWorker({
       data: hashes,
       iterator: function(item){
         return {
@@ -60,7 +60,7 @@ describe("AsyncWorker", function(){
   });
 
   it("async chained iteration", function(){
-    NANO.AsyncWorker({
+    NANO.asyncWorker({
       data: hashes,
       iterator: function(item){
         return {
@@ -87,7 +87,7 @@ describe("AsyncWorker", function(){
   });
 
   it("async chained iteration with additinal data", function(){
-    NANO.AsyncWorker({
+    NANO.asyncWorker({
       data: hashes,
       iterator: function(item){
         return {
@@ -115,7 +115,7 @@ describe("AsyncWorker", function(){
   });
 
   it("async hash iteration", function(){
-    NANO.AsyncWorker({
+    NANO.asyncWorker({
       data: hash,
       iterator: function(item, key){
         return {

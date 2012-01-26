@@ -21,6 +21,8 @@ src_files:
     - lib/assets/javascripts/nano_api/sort.js
     - lib/assets/javascripts/nano_api/filter_data.js
 
+    - spec/javascripts/test_data/**.js
+
 # stylesheets
 #
 # Return an array of stylesheet filepaths relative to src_dir to include before jasmine specs.
