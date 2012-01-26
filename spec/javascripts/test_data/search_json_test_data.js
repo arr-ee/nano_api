@@ -561,7 +561,7 @@ search_json_3 = {
     {id: 20, label: "OneTwoTrip", payment_methods: ["card"], currency_code: "rub"}, 
     {id: 24, label: "Razlet.RU", payment_methods: ["card", "yandex_money", "web_money", "euroset", "svyaznoy"], currency_code: "rub"}
   ], 
-  currency_rates: {uah: 3.91, usd: 31.42, eur: 40.51}, 
+  currency_rates: {uah: 3.91, usd: 31.42, eur: 40.51},  
   minimal_prices: {
     values: [
       [null, null, {0: 2070, 1: 6097, 2: 17020}, {0: 2070, 1: 5474}, {0: 2070, 1: 4344}, {0: 2070, 1: 7110}, {0: 2070, 1: 5339, 2: 13771}]

@@ -26,7 +26,6 @@ describe("Search Results Fabric", function(){
 
   NANO.searchResults.create(copied_search_json, function (search_results){
     search_results_1 = search_results;
-    console.log(search_results_1);
   });
 
   beforeEach(function(){

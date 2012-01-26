@@ -34,7 +34,7 @@ describe("Filter", function(){
   it("price", function(){
     runs(function(){
       var tickets = search_results_1.tickets.filter({price: [2000, 5000]}).get();
-      expect(tickets.length).toEqual(6);
+      expect(tickets.length).toEqual(5);
     });
   });
 
@@ -49,7 +49,7 @@ describe("Filter", function(){
   it("stops_airports", function(){
     runs(function(){
       var tickets = search_results_1.tickets.filter({stops_airports: {'ARH': true}}).get();
-      expect(tickets.length).toEqual(2);
+      expect(tickets.length).toEqual(7);
     });
   });
 
@@ -57,8 +57,16 @@ describe("Filter", function(){
   it("airlines", function(){
     runs(function(){
       var tickets = search_results_1.tickets.filter({airlines: {'FV': true}}).get();
-      expect(tickets.length).toEqual(6);
+      expect(tickets.length).toEqual(5);
     });
   });
+
+  it("two airlines", function(){
+    runs(function(){
+      var tickets = search_results_1.tickets.filter({airlines: {'FV': true, "SU": true}}).get();
+      expect(tickets.length).toEqual(7);
+    });
+  });
+
 
 });
