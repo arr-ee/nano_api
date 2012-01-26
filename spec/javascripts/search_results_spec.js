@@ -614,6 +614,7 @@ describe("Search Results Fabric", function(){
 
   NANO.searchResults.create(copied_search_json, function (search_results){
     search_results_1 = search_results;
+    console.log(search_results_1);
   });
 
   beforeEach(function(){
@@ -651,7 +652,7 @@ describe("Search Results Fabric", function(){
 
   it("exchange rates", function(){
     runs(function(){
-      var currency_rates = search_results_1.currency_rates.get();
+      var currency_rates = search_results_1.currency_rates;
       expect(currency_rates).toEqual(search_json_1.currency_rates);
     });
   });
