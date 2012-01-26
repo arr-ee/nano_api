@@ -590,7 +590,7 @@ describe("Search Results Fabric", function(){
 
   var filter_data = {
     direct_flight_time: 1327403400,
-    return_flight_time: 1327408800,
+    return_flight_time: null,
     flights_duration: 90,
     stops_airports: [],
     stops_count: '0',
