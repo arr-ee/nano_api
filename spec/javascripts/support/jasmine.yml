@@ -19,7 +19,7 @@ src_files:
     - lib/assets/javascripts/nano_api/search.js
     - lib/assets/javascripts/nano_api/filter.js
     - lib/assets/javascripts/nano_api/sort.js
-    - lib/assets/javascripts/nano_api/filter_data.js
+    - lib/assets/javascripts/nano_api/dictionary.js
 
     - spec/javascripts/test_data/**.js
 
