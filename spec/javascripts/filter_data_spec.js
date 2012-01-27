@@ -9,7 +9,7 @@ describe("Filter data", function(){
   _.each(search_json_1, function(value, key){
     copied_search_json1[key] = _.clone(value);
   });
-  NANO.searchResults.create(copied_search_json1, function (search_results){
+  NANO.search.create(copied_search_json1, function (search_results){
     search_results_1 = search_results;
   });
 

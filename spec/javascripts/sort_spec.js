@@ -192,7 +192,7 @@ describe("sorting", function(){
 
   beforeEach(function(){
     search_results = null;
-    NANO.searchResults.create(copied_search_json, function (results){
+    NANO.search.create(copied_search_json, function (results){
       search_results = results;
       minimal_price = _.min(search_results.tickets.get(), function(ticket){
         return ticket.minimal_price();
