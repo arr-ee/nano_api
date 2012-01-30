@@ -50,8 +50,37 @@ describe("fuzzy dictionary", function(){
       expect(iatas).toContain("HFA");
     });
   });
-  it("search by iata", function(){});
-  it("get iata info", function(){});
-  it("get city info", function(){});
-  it("is city", function(){});
+  it("search by iata", function(){
+    runs(function(){
+      var data = test_dict.iata("LED");
+      expect(data.iata).toBe("LED");
+      expect(data.airport_name).toBe("Пулково");
+    });
+  });
+  it("search by iata failed", function(){
+    runs(function(){
+      var data = test_dict.iata("WWW");
+      expect(data).toBe(null);
+      data = test_dict.iata("lksjd");
+      expect(data).toBe(null);
+    });
+  });
+  it("search by city name", function(){
+    runs(function(){
+      var data = test_dict.city("Москва");
+      expect(data.iata).toBe("MOW");
+    });
+  });
+  it("search by city name failed", function(){
+    runs(function(){
+      var data = test_dict.city("Москваa,sdh");
+      expect(data).toBe(null);
+    });
+  });
+  it("is city", function(){
+    runs(function(){
+      expect(test_dict.is_city("Москваa,sdh")).toBe(false);
+      expect(test_dict.is_city("Москва")).toBe(true);
+    });
+  });
 });
