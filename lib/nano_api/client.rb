@@ -4,7 +4,7 @@ require 'json'
 
 module NanoApi
   class Client
-    SITE = 'http://nano.local'
+    SITE = 'http://beta-nano.aviasales.ru'
     
     class << self
       def search additional_marker = nil, params
