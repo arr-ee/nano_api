@@ -11,8 +11,10 @@
 #   - dist/**/*.js
 #
 src_files:
+    - spec/javascripts/libs/**.js
     - vendor/assets/javascripts/*.js
     - lib/assets/javascripts/nano_api/core.js
+    - lib/assets/javascripts/nano_api/routes.js
     - lib/assets/javascripts/nano_api/ajax.js
     - lib/assets/javascripts/nano_api/async_worker.js
     - lib/assets/javascripts/nano_api/currency.js
@@ -48,6 +50,7 @@ stylesheets:
 #   - helpers/**/*.js
 #
 helpers:
+    - helpers/**/*.js
 
 # spec_files
 #
