@@ -40,7 +40,7 @@ describe("autocomplete", function() {
   });
   it("search by string like city name on server with fail", function() {
     var cities = null;
-    NANO.routes.autocomplete_path = "//nano/places.json";
+    NANO.routes.autocomplete_path = "";
     NANO.autocomplete.get("Кандагар", function(data){ // Кандагара нет в тестовом словаре
       cities = data;
     });
