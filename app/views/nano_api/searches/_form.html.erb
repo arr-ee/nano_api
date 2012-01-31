@@ -1,4 +1,6 @@
 <%= form_tag searches_path, remote: true, :id => "nano_search_form",  data: nano_api_urls.merge(nano_api_search: 1) do %>
+  <%= text_field_tag :origin_iata, "", :type => "hidden" %>
+  <%= text_field_tag :destination_iata, "", :type => "hidden" %>
   <p>
     <%= label_tag t('nano_api.form.origin') %>
     <%= text_field_tag :origin %>
