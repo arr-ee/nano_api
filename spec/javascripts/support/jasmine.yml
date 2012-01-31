@@ -18,6 +18,7 @@ src_files:
     - lib/assets/javascripts/nano_api/ajax.js
     - lib/assets/javascripts/nano_api/async_worker.js
     - lib/assets/javascripts/nano_api/currency.js
+    - lib/assets/javascripts/nano_api/autocomplete.js
     - lib/assets/javascripts/nano_api/search.js
     - lib/assets/javascripts/nano_api/filter.js
     - lib/assets/javascripts/nano_api/sort.js
