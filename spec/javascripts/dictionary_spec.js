@@ -22,7 +22,7 @@ describe("fuzzy dictionary", function(){
     runs(function(){
       var init_time = end - start;
       var build_time = build_end - build_start;
-      expect(init_time).toBeLessThan(items_count * 5);
+      expect(init_time).toBeLessThan(items_count * 9);
     });
   });
   it("strict search with results", function(){

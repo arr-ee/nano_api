@@ -1,26 +1,29 @@
 describe("autocomplete", function() {
 
-  var dictionary = NANO.dictionary.create("test_places", dictionary_test_data);
+  var dictionary = NANO.dictionary.create("test", dictionary_test_data);
+  var cities = null;
   NANO.autocomplete.set_dictionary(dictionary);
- 
-  it("search by string like IATA", function() {
+
+  beforeEach(function(){
+    cities = null;
     waitsFor(function(){
       return dictionary.ready;
     });
-    var led = null;
+  });
+
+  it("search by string like IATA", function() {
     NANO.autocomplete.get("led", function(data){
-      led = data;
+      cities = data;
     });
     waitsFor(function(){
-      return led !== null;
+      return cities !== null;
     });
     runs(function(){
-      expect(led.length).toBe(1);
-      expect(led[0].iata).toBe("LED");
+      expect(cities.length).toBe(1);
+      expect(cities[0].iata).toBe("LED");
     });
   });
   it("search by string like city name", function() {
-    var cities = null;
     NANO.autocomplete.get("масква", function(data){
       cities = data;
     });
@@ -39,19 +42,31 @@ describe("autocomplete", function() {
     });
   });
   it("search by string like city name on server with fail", function() {
-    var cities = null;
-    NANO.routes.autocomplete_path = "";
+    delete NANO.routes.autocomplete_path;
     NANO.autocomplete.get("Кандагар", function(data){ // Кандагара нет в тестовом словаре
       cities = data;
     });
     waitsFor(function(){
       return cities !== null;
     });
-    var iatas = _.map(cities, function(city){
-      return city.iata;
-    });
     runs(function(){
       expect(cities.length).toBe(0);
+    });
+  });
+  it("search by string like city with ajax", function(){
+    jasmine.Ajax.useMock();
+    NANO.autocomplete.get("Кандагар", function(data){ // Кандагара нет в тестовом словаре
+      cities = data;
+    });
+    var request = mostRecentAjaxRequest();
+    request.response(test_responses.autocomplete.success);
+    waitsFor(function(){
+      return cities !== null;
+    });
+    runs(function(){
+      expect(cities.length).toBe(2);
+      expect(cities[0].iata).toBe("KDG");
+      expect(cities[1].iata).toBe("NKG");
     });
   });
 });
