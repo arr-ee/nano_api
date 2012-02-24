@@ -14,3 +14,9 @@ ru:
     clicks:
       new:
         title: Переход на сайт партнера.
+    searches:
+      helpers:
+        trip_classes:
+          economy_upcase: Эконом
+          business_upcase: Бизнес
+          first_upcase: Первый

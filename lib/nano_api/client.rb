@@ -4,7 +4,8 @@ require 'json'
 
 module NanoApi
   class Client
-    SITE = 'http://localhost:3000'
+    
+    SITE = 'http://localhost:3001'
     
     class << self
       def search additional_marker = nil, params
