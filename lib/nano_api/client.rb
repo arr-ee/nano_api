@@ -5,7 +5,7 @@ require 'json'
 module NanoApi
   class Client
     
-    SITE = 'http://localhost:3001'
+    SITE = 'http://nano.local:3001'
     
     class << self
       def search additional_marker = nil, params
@@ -20,7 +20,7 @@ module NanoApi
 
       def click search_id, order_url_id
         JSON.parse(
-          site["searches/#{search_id}/order_urls/#{order_url_id}.json"].post({})
+          site["searches/#{search_id}/order_urls/#{order_url_id}.json"].get({})
         ).symbolize_keys
       rescue RestClient::ResourceNotFound
         nil
