@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Alexander Stanko']
   s.email       = ['astanko@aviasales.ru']
   s.homepage    = ''
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Basic client for nano search API}
+  s.description = %q{Provide airtickets search for your Rails app, using aviasales.ru and gocheap.travel API}
 
   s.rubyforge_project = 'nano_api'
 
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ['lib']
 
-  s.add_development_dependency 'rails', '~> 3.1.3'
+  s.add_development_dependency 'rails', '~> 3.2.2'
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'jasmine'

@@ -6,19 +6,22 @@ describe NanoApi::Client do
   
   describe '.search' do
     before do
-      FakeWeb.register_uri(:post, NanoApi::Client::SITE + '/searches.json',
+      FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
         body: '{tickets: [{test: 1}, {test: 2]}'
       )
     end
 
     it 'should require api for search action with given params' do
       action = double
+      NanoApi.stub(:marker).and_return(nil)
+      subject.stub(:api_client_signature).and_return('test_signature')
       rest_client.stub(:[]).with('searches.json').and_return(action)
-      action.should_receive(:post).with(
-        search: {marker: 'test', params_attributes: {origin_iata: 'LED'}}
+      action.should_receive(:post).with hash_including(
+        signature: 'test_signature',
+        search: {host: 'test.search.te', marker: 'test', params_attributes: {origin_iata: 'LED'}}
       )
 
-      subject.search('test', origin_iata: 'LED')
+      subject.search('test.search.te', marker: 'test', origin_iata: 'LED')
     end
 
     it 'should return api response without any mutation' do
@@ -27,25 +30,25 @@ describe NanoApi::Client do
 
     context 'handle api errors' do
       it 'should handle invalid input error' do
-        FakeWeb.register_uri(:post, NanoApi::Client::SITE + '/searches.json',
+        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
           body: '{error: "params is invalid"}',
           status: ['400', 'Bad Request']
         )
 
-        subject.search('test', {}).should == '{error: "params is invalid"}'
+        subject.search('test', {}).should == ['{error: "params is invalid"}', 400]
       end
 
       it 'should handle invalid input error' do
-        FakeWeb.register_uri(:post, NanoApi::Client::SITE + '/searches.json',
+        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
           body: '{error: "your ip is banned"}',
           status: ['403', 'Forbidden']
         )
 
-        subject.search('test', {}).should == '{error: "your ip is banned"}'
+        subject.search('test', {}).should == ['{error: "your ip is banned"}', 403]
       end
 
       it 'should handle invalid input error' do
-        FakeWeb.register_uri(:post, NanoApi::Client::SITE + '/searches.json',
+        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
           status: ['500', 'Internal Server Error']
         )
 
@@ -60,7 +63,7 @@ describe NanoApi::Client do
     
     context 'standard api call' do
       before do
-        FakeWeb.register_uri(:post, NanoApi::Client::SITE + '/searches/%d/order_urls/%d.json' % [search, url],
+        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches/%d/order_urls/%d.json' % [search, url],
           body: '{"url": "http://test.com", "http_method": "post", "params": {"test_key": "test_value"}}'
         )
       end
@@ -76,7 +79,7 @@ describe NanoApi::Client do
     
     context 'handle api errors' do
       before do
-        FakeWeb.register_uri(:post, NanoApi::Client::SITE + '/searches/%d/order_urls/%d.json' % [search, url],
+        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches/%d/order_urls/%d.json' % [search, url],
           status: ['404', 'Not Found']
         )
       end
@@ -89,7 +92,7 @@ describe NanoApi::Client do
 
   describe '.auto_complete_places' do
     context 'standard api call' do
-      before{FakeWeb.register_uri(:get, NanoApi::Client::SITE + '/places_ru.json', body: '[place1, place2]')}
+      before{FakeWeb.register_uri(:get, NanoApi.search_server + '/places_ru.json', body: '[place1, place2]')}
 
       it 'should return parsed json' do
         NanoApi::Client.auto_complete_place('temp').should == '[place1, place2]'
@@ -98,7 +101,7 @@ describe NanoApi::Client do
 
     context 'handle api errors' do
       before do
-        FakeWeb.register_uri(:get, NanoApi::Client::SITE + '/places_ru.json', status: ['400', 'Bad Request'])
+        FakeWeb.register_uri(:get, NanoApi.search_server + '/places_ru.json', status: ['400', 'Bad Request'])
       end
 
       it 'should return parsed json' do
@@ -113,7 +116,7 @@ describe NanoApi::Client do
       let(:direct_date){'date'}
       let(:return_date){'date_1'}
       before do
-        FakeWeb.register_uri :get, NanoApi::Client::SITE + '/minimal_prices.json', body: '{date_1: {date2: price}}'
+        FakeWeb.register_uri :get, NanoApi.search_server + '/minimal_prices.json', body: '{date_1: {date2: price}}'
       end
 
       it 'should return json received from api call' do
@@ -134,7 +137,7 @@ describe NanoApi::Client do
     context 'month' do
       let(:month){'month'}
       before do
-        FakeWeb.register_uri :get, NanoApi::Client::SITE + '/month_minimal_prices.json',
+        FakeWeb.register_uri :get, NanoApi.search_server + '/month_minimal_prices.json',
           body: '[price_1, price_2]'
       end
 
@@ -151,6 +154,25 @@ describe NanoApi::Client do
 
         subject.month_minimal_prices(search, month)
       end
+    end
+  end
+
+  describe '#api_client_signature' do
+    it 'should generate correct signature' do
+      subject.send(:api_client_signature, 'test', {origin: 'MOW', destination: 'LED'}).should ==
+        Digest::MD5.hexdigest('test_key:test:LED:MOW')
+    end
+  end
+
+  describe '#api_client_marker' do
+    it 'should add marker from config' do
+      NanoApi.stub(:marker).and_return('12345')
+      subject.send(:api_client_marker, 'test').should == '12345.test'
+    end
+
+    it 'should work with empty marker in config' do
+      NanoApi.stub(:marker).and_return(nil)
+      subject.send(:api_client_marker, 'test').should == 'test'
     end
   end
 end

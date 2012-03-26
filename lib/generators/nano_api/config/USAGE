@@ -1,0 +1,8 @@
+Description:
+    This generator create nano api config file
+
+Example:
+    rails generate nano_api:config
+
+    This will create:
+        config/nano_api.yml

@@ -1,0 +1,10 @@
+development: &config
+  api_token: Your key here
+  search_server: 'http://beta-nano.aviasales.ru'
+  marker:
+
+production:
+  <<: *config
+
+test:
+  <<: *config

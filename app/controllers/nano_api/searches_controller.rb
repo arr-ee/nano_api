@@ -1,18 +1,16 @@
 module NanoApi
   class SearchesController < ApplicationController
-    unloadable
-    
+
     def new
     end
 
     def create
-      search_params = params.reject{|key, value| %w[action controller format].include? key}
-      search_result = Client.search('my_additional_marker', search_params)
+      search_result = Client.search(request.host, params)
 
       if search_result.present?
-        forward_json search_result
+        forward_json(*search_result)
       else
-        render json: {}
+        render json: {}, status: :internal_server_error
       end
     end
   end
