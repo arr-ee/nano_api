@@ -4,7 +4,7 @@
     <title><%= t '.title' %></title>
   </head>
   <body>
-    <%= form_tag @click_form[:url], method: @click_form[:http_method], id: 'nano_api_click_form' do %>
+    <%= form_tag @click_form[:url], method: @click_form[:method], id: 'nano_api_click_form' do %>
       <% @click_form[:params].each do |key, value| %>
         <%= hidden_field_tag key, h(value) %>
       <% end %>
