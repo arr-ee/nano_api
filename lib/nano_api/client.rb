@@ -5,6 +5,7 @@ require 'digest/md5'
 
 module NanoApi
   class Client
+    SITE = 'http://localhost:3000'
     class << self
       SEARCH_PARAMS_KEYS = %w[
         origin_iata origin_name destination_iata destination_name

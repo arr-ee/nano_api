@@ -19,7 +19,7 @@
   </p>
   <p>
     <%= label_tag t('nano_api.form.trip_class') %>
-    <%= select_tag :trip_class, options_for_select([0, 1, 2]) %>
+    <%= select_tag :trip_class, options_for_select(trip_classes_map) %>
   </p>
   <p>
     <%= label_tag t('nano_api.form.range') %>
