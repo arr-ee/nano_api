@@ -79,7 +79,8 @@ describe NanoApi::Client do
     
     context 'handle api errors' do
       before do
-        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches/%d/order_urls/%d.json' % [search, url],
+        FakeWeb.register_uri(:post,
+          NanoApi.search_server + '/searches/%d/order_urls/%d.json' % [search, url],
           status: ['404', 'Not Found']
         )
       end
@@ -92,7 +93,9 @@ describe NanoApi::Client do
 
   describe '.auto_complete_places' do
     context 'standard api call' do
-      before{FakeWeb.register_uri(:get, NanoApi.search_server + '/places_ru.json', body: '[place1, place2]')}
+      before do
+        FakeWeb.register_uri(:get, NanoApi.search_server + '/places_ru.json', body: '[place1, place2]')
+      end
 
       it 'should return parsed json' do
         NanoApi::Client.auto_complete_place('temp').should == '[place1, place2]'
@@ -110,7 +113,19 @@ describe NanoApi::Client do
     end
   end
 
-  describe 'minimal_prices' do
+  describe '.search_duration' do
+    before do
+      FakeWeb.register_uri(:get, NanoApi.search_server + '/estimated_search_duration.json',
+        body: '{"estimated_search_duration": 23}'
+      )
+    end
+
+    it 'should return estimated duration in seconds, from api call' do
+      NanoApi::Client.search_duration.should == 23
+    end
+  end
+
+  describe '.minimal_prices' do
     let(:search){1212}
     context 'week' do
       let(:direct_date){'date'}

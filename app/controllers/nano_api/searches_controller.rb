@@ -1,6 +1,5 @@
 module NanoApi
   class SearchesController < NanoApi::ApplicationController
-
     def new
     end
 

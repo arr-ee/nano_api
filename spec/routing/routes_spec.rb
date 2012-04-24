@@ -18,4 +18,8 @@ describe 'Routes' do
     it 'should route week minimal prices'
     it 'should route month minimal prices'
   end
+
+  context 'GateMeta routes' do
+    it 'should route estimated_search_duration'
+  end
 end

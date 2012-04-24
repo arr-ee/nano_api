@@ -32,6 +32,10 @@ module NanoApi
         nil
       end
 
+      def search_duration
+        JSON.parse(site['estimated_search_duration.json'].get)['estimated_search_duration'].to_i
+      end
+
       def click search_id, order_url_id
         JSON.parse(
           site['searches/%d/order_urls/%d.json' % [search_id, order_url_id]].post({})

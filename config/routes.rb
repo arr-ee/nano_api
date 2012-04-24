@@ -2,6 +2,7 @@ NanoApi::Engine.routes.draw do
   resources :searches, only: [:new, :create]
   resources :clicks, only: :new
   resources :places, only: :index
-  match 'week_minimal_prices' => 'minimal_prices#week', as: :week_minimal_prices
-  match 'month_minimal_prices' => 'minimal_prices#month', as: :month_minimal_prices
+  get 'week_minimal_prices' => 'minimal_prices#week', as: :week_minimal_prices
+  get 'month_minimal_prices' => 'minimal_prices#month', as: :month_minimal_prices
+  get 'estimated_search_duration' => 'gate_meta#search_duration', as: :estimated_search_duration
 end
