@@ -45,7 +45,7 @@ module NanoApi
         nil
       end
 
-      def auto_complete_place temp
+      def auto_complete_places temp
         site['places_ru.json'].get(temp: temp)
       rescue RestClient::BadRequest
         nil
