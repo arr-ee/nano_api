@@ -6,6 +6,7 @@ require 'digest/md5'
 module NanoApi
   class Client
     SITE = 'http://localhost:3000'
+    AFFILIATE_MARKER_PATTERN = /\A\d{5}/
     class << self
       SEARCH_PARAMS_KEYS = %w[
         origin_iata origin_name destination_iata destination_name
@@ -56,6 +57,10 @@ module NanoApi
 
       def month_minimal_prices search_id, month = nil
         site['month_minimal_prices.json'].get(search_id: search_id, month: month)
+      end
+
+      def affilate_marker? marker
+        !!(marker.to_s =~ AFFILIATE_MARKER_PATTERN)
       end
 
       protected

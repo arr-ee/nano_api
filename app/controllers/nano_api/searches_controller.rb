@@ -1,5 +1,8 @@
 module NanoApi
   class SearchesController < NanoApi::ApplicationController
+    include NanoApi::Extensions::Markerable
+
+    before_filter :handle_marker, :only => :new
     def new
     end
 

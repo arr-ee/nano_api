@@ -3,7 +3,7 @@ require 'spec_helper'
 describe NanoApi::Client do
   subject{NanoApi::Client}
   let(:rest_client){subject.send(:site)}
-  
+
   describe '.search' do
     before do
       FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
@@ -60,7 +60,7 @@ describe NanoApi::Client do
   describe '.click' do
     let(:search){1122}
     let(:url){232}
-    
+
     context 'standard api call' do
       before do
         FakeWeb.register_uri(:post, NanoApi.search_server + '/searches/%d/order_urls/%d.json' % [search, url],
@@ -76,7 +76,7 @@ describe NanoApi::Client do
         }
       end
     end
-    
+
     context 'handle api errors' do
       before do
         FakeWeb.register_uri(:post,
@@ -109,6 +109,23 @@ describe NanoApi::Client do
 
       it 'should return parsed json' do
         NanoApi::Client.auto_complete_place('temp').should be_nil
+      end
+    end
+  end
+
+  describe '.affilate_marker?' do
+    let(:affilate_markers){['12345', '12345.lo']}
+    let(:non_affilate_markers){['yandex.org', '10.0.2.4', '', nil]}
+
+    it 'should return true if marker of affiliate' do
+      affilate_markers.each do |marker|
+        NanoApi::Client.affilate_marker?(marker).should be_true
+      end
+    end
+
+    specify 'should return false if marker is not of affiliate' do
+      non_affilate_markers.each do |marker|
+        NanoApi::Client.affilate_marker?(marker).should be_false
       end
     end
   end
