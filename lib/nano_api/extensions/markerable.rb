@@ -1,8 +1,14 @@
 module NanoApi
   module Extensions
     module Markerable
+      extend ActiveSupport::Concern
+
+      included do
+        helper_method :marker
+      end
 
     private
+
       def handle_marker
         params[:marker] ||= params[:ref]
         if _new_marker? && (_from_affiliate? || _current_non_affiliate?)
