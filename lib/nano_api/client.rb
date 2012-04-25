@@ -63,6 +63,10 @@ module NanoApi
         !!(marker.to_s =~ AFFILIATE_MARKER_PATTERN)
       end
 
+      def geoip ip, locale = I18n.locale
+        JSON.parse(site['places/ip_to_places_%s.json' % locale].get(ip: ip)).first.try(:symbolize_keys)
+      end
+
       protected
 
       def site
