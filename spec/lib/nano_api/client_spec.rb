@@ -5,27 +5,29 @@ describe NanoApi::Client do
   let(:rest_client){subject.send(:site)}
 
   describe '.search' do
-    before do
-      FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
-        body: '{tickets: [{test: 1}, {test: 2]}'
-      )
-    end
+    context 'normal response' do
+      before do
+        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
+          body: '{tickets: [{test: 1}, {test: 2]}'
+        )
+      end
 
-    it 'should require api for search action with given params' do
-      action = double
-      NanoApi.stub(:marker).and_return(nil)
-      subject.stub(:api_client_signature).and_return('test_signature')
-      rest_client.stub(:[]).with('searches.json').and_return(action)
-      action.should_receive(:post).with hash_including(
-        signature: 'test_signature',
-        search: {host: 'test.search.te', marker: 'test', params_attributes: {origin_iata: 'LED'}}
-      )
+      it 'should require api for search action with given params' do
+        action = double
+        NanoApi.stub(:marker).and_return(nil)
+        subject.stub(:api_client_signature).and_return('test_signature')
+        rest_client.stub(:[]).with('searches.json').and_return(action)
+        action.should_receive(:post).with hash_including(
+          signature: 'test_signature',
+          search: {host: 'test.search.te', marker: 'test', params_attributes: {origin_iata: 'LED'}}
+        )
 
-      subject.search('test.search.te', marker: 'test', origin_iata: 'LED')
-    end
+        subject.search('test.search.te', marker: 'test', origin_iata: 'LED')
+      end
 
-    it 'should return api response without any mutation' do
-      subject.search('test', {}).should == '{tickets: [{test: 1}, {test: 2]}'
+      it 'should return api response without any modifications' do
+        subject.search('test', {}).should == '{tickets: [{test: 1}, {test: 2]}'
+      end
     end
 
     context 'handle api errors' do
@@ -54,6 +56,20 @@ describe NanoApi::Client do
 
         subject.search('test', {}).should == nil
       end
+    end
+  end
+
+  describe '.search_params' do
+    before do
+      FakeWeb.register_uri(:get, NanoApi.search_server + '/searches/984657.json',
+        body: '{"search": {"params_attributes": {"origin": "MOW"}}}'
+      )
+    end
+
+    it 'should return params of search with given id, returned from api' do
+      subject.search_params(984657).should == {
+        "search" =>  {"params_attributes" => {"origin" => "MOW"}}
+      }
     end
   end
 

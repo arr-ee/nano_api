@@ -33,30 +33,35 @@ module NanoApi
         nil
       end
 
+      def search_params id
+        get('/searches/%d.json' % id)
+      end
+
       def search_duration
-        JSON.parse(site['estimated_search_duration.json'].get)['estimated_search_duration'].to_i
+        get('estimated_search_duration.json')['estimated_search_duration'].to_i
       end
 
       def click search_id, order_url_id
-        JSON.parse(
-          site['searches/%d/order_urls/%d.json' % [search_id, order_url_id]].post({})
-        ).symbolize_keys
+        post('searches/%d/order_urls/%d.json' % [search_id, order_url_id]).symbolize_keys
       rescue RestClient::ResourceNotFound
         nil
       end
 
-      def auto_complete_places temp
-        site['places_ru.json'].get(temp: temp)
+      def auto_complete_place temp
+        get('places_ru.json', {temp: temp}, parse_json: false)
       rescue RestClient::BadRequest
         nil
       end
 
       def week_minimal_prices search_id, direct_date = nil, return_date = nil
-        site['minimal_prices.json'].get(search_id: search_id, direct_date: direct_date, return_date: return_date)
+        get('minimal_prices.json',
+          {search_id: search_id, direct_date: direct_date, return_date: return_date},
+          parse_json: false
+        )
       end
 
       def month_minimal_prices search_id, month = nil
-        site['month_minimal_prices.json'].get(search_id: search_id, month: month)
+        get('month_minimal_prices.json', {search_id: search_id, month: month}, parse_json: false)
       end
 
       def affilate_marker? marker
@@ -64,10 +69,24 @@ module NanoApi
       end
 
       def geoip ip, locale = I18n.locale
-        JSON.parse(site['places/ip_to_places_%s.json' % locale].get(ip: ip)).first.try(:symbolize_keys)
+        get('places/ip_to_places_%s.json' % locale, ip: ip).first.try(:symbolize_keys)
       end
 
       protected
+
+      def get *args
+        request :get, *args
+      end
+
+      def post *args
+        request :post, *args
+      end
+
+      def request method, path, params = {}, options = {}
+        options[:parse_json] = true unless options.key?(:parse_json)
+        response = site[path].send(method, params)
+        options[:parse_json] ? JSON.parse(response) : response
+      end
 
       def site
         @site ||= RestClient::Resource.new(NanoApi.search_server)

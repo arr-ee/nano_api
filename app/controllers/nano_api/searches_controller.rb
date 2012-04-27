@@ -6,6 +6,12 @@ module NanoApi
     before_filter :handle_marker, :only => :new
 
     def new
+      #@search = Search.new
+    end
+
+    def show
+      #@search = Search.find(params[:id])
+      render :new
     end
 
     def create
