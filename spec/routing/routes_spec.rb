@@ -20,6 +20,10 @@ describe 'Routes' do
   end
 
   context 'GateMeta routes' do
-    it 'should route estimated_search_duration'
+    it 'should route estimated search duration'
+  end
+
+  context 'Airlines routes' do
+    it 'should route airlines for direction'
   end
 end

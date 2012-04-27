@@ -28,9 +28,17 @@ module NanoApi
         request :post, *args
       end
 
+      def get_json path, params = {}, options = {}
+        get(path, params, options.merge(parse_json: false))
+      end
+
+      def post_json path, params = {}, options = {}
+        post(path, params, options.merge(parse_json: false))
+      end
+
       def request method, path, params = {}, options = {}
         options[:parse_json] = true unless options.key?(:parse_json)
-        response = site[path].send(method, params)
+        response = site[path + '.json'].send(method, params)
         options[:parse_json] ? JSON.parse(response) : response
       end
 

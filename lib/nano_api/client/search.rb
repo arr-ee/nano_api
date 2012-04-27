@@ -11,14 +11,14 @@ module NanoApi
       def search host, params
         marker = api_client_marker(params[:marker])
         search_params = params.slice(*SEARCH_PARAMS_KEYS)
-        site['searches.json'].post(
+        post_json('searches',
+          signature: api_client_signature(marker, search_params),
+          enable_api_auth: true,
           search: {
             host: host,
             marker: marker,
             params_attributes: search_params
-          },
-          signature: api_client_signature(marker, search_params),
-          enable_api_auth: true
+          }
         )
       rescue RestClient::BadRequest, RestClient::Forbidden => exception
         [exception.http_body, exception.http_code]
@@ -27,11 +27,11 @@ module NanoApi
       end
 
       def search_params id
-        get('/searches/%d.json' % id)
+        get('/searches/%d' % id)
       end
 
       def search_duration
-        get('estimated_search_duration.json')['estimated_search_duration'].to_i
+        get('estimated_search_duration')['estimated_search_duration'].to_i
       end
 
       private

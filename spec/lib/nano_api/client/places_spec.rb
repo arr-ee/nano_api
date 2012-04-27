@@ -6,6 +6,7 @@ describe NanoApi::Client do
   describe '.auto_complete_places' do
     context 'standard api call' do
       before do
+        I18n.locale = :ru
         FakeWeb.register_uri(:get, NanoApi.search_server + '/places_ru.json', body: '[place1, place2]')
       end
 

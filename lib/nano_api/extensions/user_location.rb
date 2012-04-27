@@ -7,7 +7,7 @@ module NanoApi
         helper_method :user_location
       end
 
-    private
+      private
 
       def user_location
         @user_location ||= NanoApi::Client.geoip(request.remote_ip)
