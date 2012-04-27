@@ -28,11 +28,11 @@ module NanoApi
       end
 
       def _from_affiliate?
-        NanoApi::Client.affilate_marker?(params[:marker])
+        NanoApi::Client.affiliate_marker?(params[:marker])
       end
 
       def _current_non_affiliate?
-        !NanoApi::Client.affilate_marker?(cookies[:marker])
+        !NanoApi::Client.affiliate_marker?(cookies[:marker])
       end
     end
   end

@@ -129,19 +129,19 @@ describe NanoApi::Client do
     end
   end
 
-  describe '.affilate_marker?' do
-    let(:affilate_markers){['12345', '12345.lo']}
-    let(:non_affilate_markers){['yandex.org', '10.0.2.4', '', nil]}
+  describe '.affiliate_marker?' do
+    let(:affiliate_markers){['12345', '12345.lo']}
+    let(:non_affiliate_markers){['yandex.org', '10.0.2.4', '', nil]}
 
     it 'should return true if marker of affiliate' do
-      affilate_markers.each do |marker|
-        NanoApi::Client.affilate_marker?(marker).should be_true
+      affiliate_markers.each do |marker|
+        NanoApi::Client.affiliate_marker?(marker).should be_true
       end
     end
 
     specify 'should return false if marker is not of affiliate' do
-      non_affilate_markers.each do |marker|
-        NanoApi::Client.affilate_marker?(marker).should be_false
+      non_affiliate_markers.each do |marker|
+        NanoApi::Client.affiliate_marker?(marker).should be_false
       end
     end
   end

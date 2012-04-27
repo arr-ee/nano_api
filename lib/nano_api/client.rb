@@ -64,7 +64,7 @@ module NanoApi
         get('month_minimal_prices.json', {search_id: search_id, month: month}, parse_json: false)
       end
 
-      def affilate_marker? marker
+      def affiliate_marker? marker
         !!(marker.to_s =~ AFFILIATE_MARKER_PATTERN)
       end
 
