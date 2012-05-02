@@ -9,6 +9,7 @@ module NanoApi
       ].map(&:to_sym)
 
       def search host, params
+        params.symbolize_keys!
         marker = api_client_marker(params[:marker])
         search_params = params.slice(*SEARCH_PARAMS_KEYS)
         post_json('searches',

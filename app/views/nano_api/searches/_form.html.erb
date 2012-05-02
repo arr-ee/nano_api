@@ -1,43 +1,49 @@
-<%= form_tag searches_path, remote: true, :id => :nano_search_form,  data: nano_api_urls.merge(nano_api_search: 1) do %>
-  <%= hidden_field_tag :origin_iata %>
-  <%= hidden_field_tag :destination_iata %>
+<%= form_for @search, url: searches_path, as: :search, remote: true,
+  html: {id: :nano_search_form, data: nano_api_urls.merge(nano_api_search: 1)} do |f| %>
+
+  <%= f.hidden_field :origin_iata %>
+  <%= f.hidden_field :destination_iata %>
   <p>
-    <%= label_tag t('nano_api.form.origin') %>
-    <%= text_field_tag :origin_name %>
+    <%= f.label :origin_name %>
+    <%= f.text_field :origin_name %>
   </p>
   <p>
-    <%= label_tag t('nano_api.form.destination') %>
-    <%= text_field_tag :destination_name %>
+    <%= f.label :destination_name %>
+    <%= f.text_field :destination_name %>
   </p>
   <p>
-    <%= label_tag t('nano_api.form.depart_date') %>
-    <%= text_field_tag :depart_date %>
+    <%= f.label :depart_date %>
+    <%= f.text_field :depart_date %>
   </p>
   <p>
-    <%= label_tag t('nano_api.form.return_date') %>
-    <%= text_field_tag :return_date %>
+    <%= f.label :return_date %>
+    <%= f.text_field :return_date %>
   </p>
   <p>
-    <%= label_tag t('nano_api.form.trip_class') %>
-    <%= select_tag :trip_class, options_for_select(trip_classes_map) %>
+    <%= f.label :trip_class %>
+    <%= f.select :trip_class, trip_classes_map %>
   </p>
   <p>
-    <%= label_tag t('nano_api.form.range') %>
-    <%= check_box_tag :range %>
+    <%= f.label :range %>
+    <%= f.check_box :range %>
   </p>
   <p>
-    <%= label_tag t('nano_api.form.adults') %>
-    <%= select_tag :adults, options_for_select((1..8).to_a) %>
+    <%= f.label :one_way %>
+    <%= f.check_box :one_way %>
   </p>
   <p>
-    <%= label_tag t('nano_api.form.children') %>
-    <%= select_tag :children, options_for_select((0..5).to_a) %>
+    <%= f.label :adults %>
+    <%= f.select :adults, NanoApi::Search.adults_values %>
   </p>
   <p>
-    <%= label_tag t('nano_api.form.infants') %>
-    <%= select_tag :infants, options_for_select((0..5).to_a) %>
+    <%= f.label :children %>
+    <%= f.select :children, NanoApi::Search.children_values %>
   </p>
   <p>
-    <%= submit_tag t('nano_api.form.submit') %>
+    <%= f.label :infants %>
+    <%= f.select :infants, NanoApi::Search.infants_values %>
+  </p>
+  <p>
+    <%= f.submit %>
   </p>
 <% end %>

@@ -23,7 +23,7 @@ describe NanoApi::SearchesController do
     }}
 
     before do
-      NanoApi::Client.stub(:search_params).with(1).and_return(params.to_json)
+      NanoApi::Client.stub(:search_params).with('1').and_return(params)
     end
 
     it 'should be successful' do
@@ -38,7 +38,7 @@ describe NanoApi::SearchesController do
       NanoApi::Client.stub(:search).and_return('{tickets: [{test: 1}, {test: 2}]}')
       post :create, use_route: :nano_api
     end
-    
+
     it 'should be success' do
       response.content_type.should == Mime::JSON
       response.should be_success

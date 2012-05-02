@@ -6,16 +6,17 @@ module NanoApi
     before_filter :handle_marker, :only => :new
 
     def new
-      #@search = Search.new
+      @search = Search.new(params[:search])
     end
 
     def show
-      #@search = Search.find(params[:id])
+      @search = Search.find(params[:id])
       render :new
     end
 
     def create
-      search_result = Client.search(request.host, params)
+      @search = Search.new(params[:search])
+      search_result = @search.search(request.host)
 
       if search_result.present?
         forward_json(*search_result)

@@ -1,0 +1,12 @@
+en:
+  nano_model:
+    attributes:
+      nano_api/search:
+        origin_name: Origin
+        destination_name: Destination
+        depart_date: Depart date
+        return_date: Return date
+        range: ±3 days
+        one_way: One way
+        trip_class: Your class
+        passengers: Number of passengers

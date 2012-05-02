@@ -18,32 +18,14 @@ NANO.plugin(function (NANO) {
       "tickets"
     ],
 
-    _params_list: [
-      "origin_iata",
-      "destination_iata",
-      "origin_name",
-      "destination_name",
-      "depart_date",
-      "return_date",
-      "trip_class",
-      "range",
-      "adults",
-      "children",
-      "infants",
-      "marker"
-    ],
-
     new_search: function(search_data){
       var self = this;
       var request_params = {};
-      _.each(this._params_list, function(param_name){
-        request_params[param_name] = search_data.data[param_name];
-      });
       var ajax_params = {
         url: NANO.routes.search_path,
         type: NANO.routes.search_method,
         dataType: 'json',
-        data: request_params,
+        data: search_data.data,
         success: function(data){
           data.request_params = request_params;
           self.create(data, search_data.success);
