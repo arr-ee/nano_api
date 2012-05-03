@@ -38,7 +38,7 @@ module NanoApi
 
       def request method, path, params = {}, options = {}
         options[:parse_json] = true unless options.key?(:parse_json)
-        response = site[path + '.json'].send(method, params)
+        response = site[path + '.json'].send(method, params.reverse_merge(locale: I18n.locale))
         options[:parse_json] ? JSON.parse(response) : response
       end
 

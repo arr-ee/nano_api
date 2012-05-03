@@ -61,7 +61,7 @@ describe NanoApi::Client do
     it 'should pass ip as api call param' do
       action = double
       rest_client.stub(:[]).with('places/ip_to_places_en.json').and_return(action)
-      action.should_receive(:get).with(ip: '1.1.1.1').and_return('[]')
+      action.should_receive(:get).with(hash_including(ip: '1.1.1.1')).and_return('[]')
 
       subject.geoip('1.1.1.1')
     end

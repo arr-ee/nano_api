@@ -19,9 +19,9 @@ describe NanoApi::Client do
       it 'should make api request with correct params' do
         action = double
         rest_client.stub(:[]).with('minimal_prices.json').and_return(action)
-        action.should_receive(:get).with(
+        action.should_receive(:get).with(hash_including(
           search_id: search, direct_date: direct_date, return_date: return_date
-        )
+        ))
 
         subject.week_minimal_prices(search, direct_date, return_date)
       end
@@ -41,7 +41,7 @@ describe NanoApi::Client do
       it 'should make api request with correct params' do
         action = double
         rest_client.stub(:[]).with('month_minimal_prices.json').and_return(action)
-        action.should_receive(:get).with(search_id: search, month: month)
+        action.should_receive(:get).with(hash_including(search_id: search, month: month))
 
         subject.month_minimal_prices(search, month)
       end

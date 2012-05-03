@@ -5,5 +5,10 @@ gemspec
 
 gem 'guard'
 gem 'guard-rspec'
-gem 'rb-inotify' unless RUBY_PLATFORM =~ /darwin/i
-gem 'libnotify'
+
+if RUBY_PLATFORM =~ /darwin/i
+  gem 'rb-fsevent'
+else
+  gem 'rb-inotify'
+  gem 'libnotify'
+end

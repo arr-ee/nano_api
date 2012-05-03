@@ -16,7 +16,7 @@ describe NanoApi::Client do
   it 'should pass iatas from params to api call' do
     action = double
     rest_client.stub(:[]).with('airlines_for_direction.json').and_return(action)
-    action.should_receive(:get).with(origin_iata: 'LED', destination_iata: 'MOW')
+    action.should_receive(:get).with(hash_including(origin_iata: 'LED', destination_iata: 'MOW'))
 
     subject.airlines_for_direction('LED', 'MOW')
   end
