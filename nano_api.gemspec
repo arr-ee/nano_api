@@ -24,6 +24,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'jasmine'
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'fakeweb'
+  s.add_development_dependency 'fabrication'
+  s.add_development_dependency 'forgery'
 
   s.add_runtime_dependency 'rest-client'
 end

@@ -16,4 +16,8 @@ describe NanoApi::Model do
   specify{model.new.should_not be_persisted}
   specify{model.instantiate({}).should be_an_instance_of model}
   specify{model.instantiate({}).should be_persisted}
+
+  context 'Fault tolerance' do
+    specify{expect{model.new(:foo => 'bar')}.should_not raise_error}
+  end
 end

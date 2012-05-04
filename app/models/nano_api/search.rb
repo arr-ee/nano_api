@@ -21,14 +21,14 @@ module NanoApi
       adults.to_i + children.to_i + infants.to_i
     end
 
-    def origin= data
-      self.origin_name = data['name']
-      self.origin_iata = data['iata']
-    end
-
-    def destination= data
-      self.destination_name = data['name']
-      self.destination_iata = data['iata']
+    [:origin, :destination].each do |name|
+      define_method "#{name}=" do |data|
+        if data.is_a?(Hash)
+          data.symbolize_keys!
+          send "#{name}_name=", data[:name] if data.key?(:name)
+          send "#{name}_iata=", data[:iata] if data.key?(:iata)
+        end
+      end
     end
 
     def search host

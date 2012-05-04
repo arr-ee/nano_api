@@ -4,6 +4,7 @@ ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../dummy/config/environment.rb',  __FILE__)
 require 'rails/test_help'
 require 'rspec/rails'
+require 'fabrication'
 
 ActionMailer::Base.delivery_method = :test
 ActionMailer::Base.perform_deliveries = true
@@ -24,7 +25,8 @@ FakeWeb.allow_net_connect = false
 ActiveRecord::Migrator.migrate File.expand_path('../dummy/db/migrate/', __FILE__)
 
 # Load support files
-Dir['#{File.dirname(__FILE__)}/support/**/*.rb'].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/fabricators/**/*.rb"].each { |f| require f }
 
 RSpec.configure do |config|
   # Remove this line if you don't want RSpec's should and should_not

@@ -6,7 +6,7 @@ module NanoApi
     before_filter :handle_marker, :only => :new
 
     def new
-      @search = Search.new(params[:search])
+      @search = Search.new(params[:search].is_a?(Hash) ? params[:search] : params)
     end
 
     def show
