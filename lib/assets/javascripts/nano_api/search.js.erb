@@ -27,7 +27,7 @@ NANO.plugin(function (NANO) {
         dataType: 'json',
         data: search_data.data,
         success: function(data){
-          data.request_params = request_params;
+          data.request_params = search_data.data;
           self.create(data, search_data.success);
         },
         error: search_data.error
