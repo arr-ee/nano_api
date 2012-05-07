@@ -38,7 +38,7 @@ module NanoApi
     def self.find id
       hash = Client.search_params(id)
       raise NanoApi::Model::NotFound unless hash
-      instantiate(hash)
+      new(hash)
     end
 
   end
