@@ -2,9 +2,58 @@ require 'spec_helper'
 
 describe NanoApi::SearchesController do
   describe 'GET :new' do
+    let!(:geoip_data){{iata: 'MOW', name: 'Moscow'}}
+    before{NanoApi::Client.stub(:geoip).and_return(geoip_data)}
+
     it 'should be successful' do
       get :new, use_route: :nano_api
       response.should be_success
+    end
+
+    context 'search and cookies' do
+      let(:search){{
+        search: {
+          origin_iata: 'LED',
+          destination_iata: 'LED',
+          depart_date: '2012-04-01',
+          return_date: '2012-04-01',
+          trip_class: '0',
+          adults: '1'
+        }.stringify_keys!
+      }}
+
+      context do
+        before{get :new}
+        specify{assigns[:search].attributes.should include({'origin_name' => 'Moscow', 'origin_iata' => 'MOW'})}
+      end
+
+      context 'unwrapped params' do
+        before{get :new, search[:search]}
+        specify{assigns[:search].attributes.should include search[:search]}
+      end
+
+      context 'wrapped params' do
+        before{get :new, search}
+        specify{assigns[:search].attributes.should include search[:search]}
+      end
+
+      context 'cookies default values' do
+        let(:cookies_defaults){{
+          origin_iata: 'MOW',
+          destination_iata: 'LON'
+        }.stringify_keys!}
+        before{cookies.stub(:[]).with(:ls){cookies_defaults.to_json}}
+
+        context do
+          before{get :new}
+          specify{assigns[:search].attributes.should include cookies_defaults}
+        end
+
+        context do
+          before{get :new, search}
+          specify{assigns[:search].attributes.should include search[:search]}
+        end
+      end
     end
   end
 
@@ -27,7 +76,7 @@ describe NanoApi::SearchesController do
     end
 
     it 'should be successful' do
-      get :show, id: 1, user_route: :nano_api
+      get :show, id: 1, use_route: :nano_api
       response.should be_success
       response.should render_template(:new)
     end
@@ -44,6 +93,8 @@ describe NanoApi::SearchesController do
       response.should be_success
       response.body.should == '{tickets: [{test: 1}, {test: 2}]}'
     end
+
+    specify{cookies[:ls].should == assigns[:search].attributes_for_cookies.to_json}
 
     it 'should pass params to api call'
     it 'should return json received from api'

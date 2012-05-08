@@ -35,6 +35,10 @@ module NanoApi
       Client.search(host, attributes)
     end
 
+    def attributes_for_cookies
+      attributes
+    end
+
     def self.find id
       hash = Client.search_params(id)
       raise NanoApi::Model::NotFound unless hash
