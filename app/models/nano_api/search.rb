@@ -25,8 +25,8 @@ module NanoApi
       define_method "#{name}=" do |data|
         if data.is_a?(Hash)
           data.symbolize_keys!
-          send "#{name}_name=", data[:name] if data.key?(:name)
-          send "#{name}_iata=", data[:iata] if data.key?(:iata)
+          send "#{name}_name=", data[:name] if !send("#{name}_name?") && data.key?(:name)
+          send "#{name}_iata=", data[:iata] if !send("#{name}_iata?") && data.key?(:iata)
         end
       end
     end

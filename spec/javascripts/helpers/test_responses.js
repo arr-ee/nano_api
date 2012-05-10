@@ -8,5 +8,5 @@ var test_responses = {
     }
   },
   month_minimal_price: {},
-  week_minimal_price: {},
+  week_minimal_price: {}
 };

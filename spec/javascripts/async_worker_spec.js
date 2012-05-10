@@ -140,16 +140,16 @@ describe("asyncWorker", function(){
           length: 3
         },
         "bar": {
-          value: 10, 
-          length: 3,
+          value: 10,
+          length: 3
         },
         "foofoo": {
           value: 20,
-          length: 6,
+          length: 6
         },
         "barbar": {
           value: 25,
-          length: 6,
+          length: 6
         }
       });
     });

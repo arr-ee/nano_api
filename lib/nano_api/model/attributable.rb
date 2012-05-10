@@ -16,6 +16,9 @@ module NanoApi
           define_method name do
             read_attribute(name)
           end
+          define_method "#{name}?" do
+            read_attribute(name).present?
+          end
           define_method "#{name}=" do |value|
             write_attribute(name, value)
           end

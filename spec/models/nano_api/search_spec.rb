@@ -7,7 +7,7 @@ describe NanoApi::Search do
 
     context 'proper value' do
       before{search.origin = {name: 'Foo', iata: 'Bar'}}
-      specify{search.origin_name.should == 'Foo'}
+      specify{search.origin_name.should == 'Moscow'}
       specify{search.origin_iata.should == 'Bar'}
     end
     context 'wrong value' do
@@ -22,7 +22,7 @@ describe NanoApi::Search do
 
     context 'proper value' do
       before{search.destination = {name: 'Foo', iata: 'Bar'}}
-      specify{search.destination_name.should == 'Foo'}
+      specify{search.destination_name.should == 'London'}
       specify{search.destination_iata.should == 'Bar'}
     end
     context 'wrong value' do
