@@ -11,7 +11,7 @@ describe NanoApi::Client do
       end
 
       it 'should return parsed json' do
-        subject.auto_complete_place('temp').should == '[place1, place2]'
+        subject.auto_complete_place('term').should == '[place1, place2]'
       end
     end
 
@@ -21,7 +21,7 @@ describe NanoApi::Client do
       end
 
       it 'should return parsed json' do
-        subject.auto_complete_place('temp').should be_nil
+        subject.auto_complete_place('term').should be_nil
       end
     end
   end

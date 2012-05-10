@@ -1,8 +1,8 @@
 module NanoApi
   module Client
     module Places
-      def auto_complete_place temp, locale = I18n.locale
-        get_json('places_%s' % locale, temp: temp)
+      def auto_complete_place term, locale = I18n.locale
+        get_json('places_%s' % locale, term: term)
       rescue RestClient::BadRequest
         nil
       end
