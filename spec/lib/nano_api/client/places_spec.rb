@@ -2,12 +2,15 @@ require 'spec_helper'
 
 describe NanoApi::Client do
   let(:rest_client){subject.send(:site)}
+  let(:fake){ %r{^#{URI.join(NanoApi.search_server, path)}} }
 
   describe '.auto_complete_places' do
+    let(:path){'places_ru.json'}
+
     context 'standard api call' do
       before do
         I18n.locale = :ru
-        FakeWeb.register_uri(:get, NanoApi.search_server + '/places_ru.json', body: '[place1, place2]')
+        FakeWeb.register_uri(:get, fake, body: '[place1, place2]')
       end
 
       it 'should return parsed json' do
@@ -17,7 +20,7 @@ describe NanoApi::Client do
 
     context 'handle api errors' do
       before do
-        FakeWeb.register_uri(:get, NanoApi.search_server + '/places_ru.json', status: ['400', 'Bad Request'])
+        FakeWeb.register_uri(:get, fake, status: ['400', 'Bad Request'])
       end
 
       it 'should return parsed json' do
@@ -27,6 +30,8 @@ describe NanoApi::Client do
   end
 
   describe '.ip_to_city' do
+    let(:path){'places/ip_to_places_en.json'}
+
     let(:places){[{
       iata: 'MOW',
       name: 'Moscow',
@@ -43,8 +48,7 @@ describe NanoApi::Client do
 
     before do
       I18n.locale = :en
-      FakeWeb.register_uri(:get, NanoApi.search_server + '/places/ip_to_places_en.json',
-        body: places.to_json
+      FakeWeb.register_uri(:get, fake, body: places.to_json
       )
     end
 
@@ -56,14 +60,6 @@ describe NanoApi::Client do
         index_strings: ['mow'],
         airport_name: 'Domodedovo'
       }
-    end
-
-    it 'should pass ip as api call param' do
-      action = double
-      rest_client.stub(:[]).with('places/ip_to_places_en.json').and_return(action)
-      action.should_receive(:get).with(hash_including(ip: '1.1.1.1')).and_return('[]')
-
-      subject.geoip('1.1.1.1')
     end
   end
 end

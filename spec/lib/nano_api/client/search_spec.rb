@@ -2,13 +2,13 @@ require 'spec_helper'
 
 describe NanoApi::Client do
   let(:rest_client){subject.send(:site)}
+  let(:fake){ %r{^#{URI.join(NanoApi.search_server, path)}} }
 
   describe '.search' do
+    let(:path){'searches.json'}
     context 'normal response' do
       before do
-        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
-          body: '{tickets: [{test: 1}, {test: 2]}'
-        )
+        FakeWeb.register_uri :post, fake, body: '{tickets: [{test: 1}, {test: 2]}'
       end
 
       it 'should require api for search action with given params' do
@@ -31,10 +31,9 @@ describe NanoApi::Client do
 
     context 'handle api errors' do
       it 'should handle invalid input error' do
-        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
+        FakeWeb.register_uri :post, fake,
           body: '{error: "params is invalid"}',
           status: ['400', 'Bad Request']
-        )
 
         subject.search('test', {}).should == ['{error: "params is invalid"}', 400]
       end
@@ -59,10 +58,10 @@ describe NanoApi::Client do
   end
 
   describe '.search_params' do
+    let(:path){'searches/984657.json'}
+
     before do
-      FakeWeb.register_uri(:get, NanoApi.search_server + '/searches/984657.json',
-        body: '{"search": {"params_attributes": {"origin": "MOW"}}}'
-      )
+      FakeWeb.register_uri :get, fake, body: '{"search": {"params_attributes": {"origin": "MOW"}}}'
     end
 
     it 'should return params of search with given id, returned from api' do
@@ -73,10 +72,10 @@ describe NanoApi::Client do
   end
 
   describe '.search_duration' do
+    let(:path){'estimated_search_duration.json'}
+
     before do
-      FakeWeb.register_uri(:get, NanoApi.search_server + '/estimated_search_duration.json',
-        body: '{"estimated_search_duration": 23}'
-      )
+      FakeWeb.register_uri :get, fake, body: '{"estimated_search_duration": 23}'
     end
 
     it 'should return estimated duration in seconds, from api call' do
