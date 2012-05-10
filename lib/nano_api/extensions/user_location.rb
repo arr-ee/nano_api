@@ -10,7 +10,7 @@ module NanoApi
       private
 
       def user_location
-        @user_location ||= NanoApi::Client.geoip(request.remote_ip)
+        @user_location ||= NanoApi::Client.geoip(request.remote_ip) rescue nil
       end
     end
   end
