@@ -12,7 +12,6 @@ describe NanoApi::Extensions::UserLocation do
     NanoApi::Client.stub(:geoip).with('1.1.1.1').and_return({iata: 'MOW'})
   end
 
-  it 'should call find user location by ip' do
-    controller.send(:user_location).should == {iata: 'MOW'}
-  end
+  specify{controller.send(:user_location).should == {iata: 'MOW'}}
+  specify{controller.send(:user_location_attributes).should == {origin_name: nil, origin_iata: 'MOW'}}
 end

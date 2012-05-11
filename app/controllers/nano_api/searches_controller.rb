@@ -33,8 +33,7 @@ module NanoApi
       search_params = params[:search].is_a?(Hash) ? params[:search] : params
       cookie_defaults = JSON.parse(cookies[:ls].presence || '{}')
       search_params.reverse_merge!(cookie_defaults) if cookie_defaults.is_a?(Hash)
-      geoip_defaults = {:origin_name => user_location[:name], :origin_iata => user_location[:iata]} if user_location.is_a?(Hash)
-      search_params.reverse_merge!(geoip_defaults || {})
+      search_params.reverse_merge!(user_location_attributes)
     end
 
   end
