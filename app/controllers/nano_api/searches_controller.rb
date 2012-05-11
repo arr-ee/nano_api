@@ -30,10 +30,9 @@ module NanoApi
   private
 
     def search_params
+      cookie_defaults = JSON.parse(cookies[:ls].presence) rescue {}
       search_params = params[:search].is_a?(Hash) ? params[:search] : params
-      cookie_defaults = JSON.parse(cookies[:ls].presence || '{}')
-      search_params.reverse_merge!(cookie_defaults) if cookie_defaults.is_a?(Hash)
-      search_params.reverse_merge!(user_location_attributes)
+      user_location_attributes.merge(cookie_defaults).merge(search_params)
     end
 
   end
