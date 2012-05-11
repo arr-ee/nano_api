@@ -3,6 +3,9 @@ module NanoApi
     class NotFound < ::StandardError
     end
 
+    TRUE_VALUES = [true, 1, '1', 't', 'T', 'true', 'TRUE'].to_set
+    FALSE_VALUES  = [false, 0, '0', 'f', 'F', 'false', 'FALSE'].to_set
+
     extend ActiveSupport::Concern
 
     included do

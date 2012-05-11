@@ -1,24 +1,26 @@
 module NanoApi
   class Search
+    unloadable
+
     include NanoApi::Model
 
     attribute :origin_iata
     attribute :origin_name
     attribute :destination_iata
     attribute :destination_name
-    attribute(:depart_date) {Date.current + 2.weeks}
-    attribute(:return_date) {Date.current + 3.weeks}
-    attribute :range, false
-    attribute :one_way, false
-    attribute :trip_class, in: (0..2), default: 0
-    attribute :adults, in: (1..8), default: 1
-    attribute :children, in: (0..5), default: 0
-    attribute :infants, in: (0..5), default: 0
+    attribute(:depart_date){Date.current + 2.weeks}
+    attribute(:return_date){Date.current + 3.weeks}
+    attribute :range, type: :boolean, default: false
+    attribute :one_way, type: :boolean, default: false
+    attribute :trip_class, type: :integer, in: (0..2), default: 0
+    attribute :adults, type: :integer, in: (1..8), default: 1
+    attribute :children, type: :integer, in: (0..5), default: 0
+    attribute :infants, type: :integer, in: (0..5), default: 0
 
     attr_accessor :marker
 
     def passengers
-      adults.to_i + children.to_i + infants.to_i
+      [adults, children, infants].sum
     end
 
     [:origin, :destination].each do |name|
@@ -31,12 +33,20 @@ module NanoApi
       end
     end
 
-    def search host
-      Client.search(host, attributes)
+    def return_date_for_search
+      return_date unless one_way
     end
 
-    def attributes_for_cookies
-      attributes
+    def search host
+      Client.search(host, attributes_for_search)
+    end
+
+    [:search, :cookies].each do |postfix|
+      define_method "attributes_for_#{postfix}" do
+        Hash[attribute_names.map do |name|
+          [name, respond_to?("#{name}_for_#{postfix}") ? send("#{name}_for_#{postfix}") : send(name)]
+        end]
+      end
     end
 
     def self.find id

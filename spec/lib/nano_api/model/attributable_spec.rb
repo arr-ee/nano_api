@@ -9,8 +9,8 @@ describe NanoApi::Model::Attributable do
       attr_reader :name
 
       attribute :hello
-      attribute :count, 10
-      attribute(:calc) {2 + 3}
+      attribute :count, type: :integer, default: 10
+      attribute(:calc, type: :integer) {2 + 3}
 
       def initialize name = nil
         @attributes = self.class.initialize_attributes

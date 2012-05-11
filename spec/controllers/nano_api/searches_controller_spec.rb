@@ -17,8 +17,8 @@ describe NanoApi::SearchesController do
           destination_iata: 'LED',
           depart_date: '2012-04-01',
           return_date: '2012-04-01',
-          trip_class: '0',
-          adults: '1'
+          trip_class: 0,
+          adults: 1
         }.stringify_keys!
       }}
 

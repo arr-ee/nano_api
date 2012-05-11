@@ -1,6 +1,7 @@
 module NanoApi
   module Model
     module Attributable
+      include Serializer
       extend ActiveSupport::Concern
 
       included do
@@ -11,7 +12,11 @@ module NanoApi
       module ClassMethods
         def attribute name, options = {}, &block
           default = options.is_a?(Hash) ? options[:default] : options
-          self._attributes = self._attributes.merge(name => (block || default))
+          type = options.is_a?(Hash) ? (options[:type].try(:to_sym) || :string) : :string
+          self._attributes = self._attributes.merge(name => {
+            default: (block || default),
+            type: type
+          })
 
           define_method name do
             read_attribute(name)
@@ -32,24 +37,31 @@ module NanoApi
 
         def initialize_attributes
           _attributes.inject(ActiveSupport::HashWithIndifferentAccess.new) do |result, (name, value)|
-            result[name] = value.respond_to?(:call) ? value.call : value
+            default = value[:default]
+            result[name] = default.respond_to?(:call) ? default.call : default
             result
           end
         end
       end
 
       def read_attribute name
-        @attributes[name]
+        type = self.class._attributes[name][:type]
+        deserialize(@attributes[name], type)
       end
       alias_method :[], :read_attribute
 
       def write_attribute name, value
-        @attributes[name] = value
+        type = self.class._attributes[name][:type]
+        @attributes[name] = serialize(value, type)
       end
       alias_method :[]=, :write_attribute
 
       def attributes
-        Hash[@attributes.map { |name, _| [name, read_attribute(name)] }]
+        Hash[attribute_names.map { |name| [name, send(name)] }]
+      end
+
+      def attribute_names
+        @attributes.keys
       end
 
       def attributes= attributes

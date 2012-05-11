@@ -15,6 +15,7 @@ module NanoApi
           result[key] = value if value.present?
           result
         end
+
         post_json('searches',
           signature: api_client_signature(marker, search_params),
           enable_api_auth: true,
