@@ -1,5 +1,5 @@
 module NanoApi
-  class PlacesController < ApplicationController
+  class PlacesController < NanoApi::ApplicationController
     def index
       if complete = Client.auto_complete_place(params[:term])
         forward_json complete

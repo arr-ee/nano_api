@@ -1,5 +1,5 @@
 module NanoApi
-  class ClicksController < ApplicationController
+  class ClicksController < NanoApi::ApplicationController
     def new
       if @click_form = Client.click(params[:search_id], params[:url_id])
         render stream: true
