@@ -169,6 +169,9 @@ NANO.plugin(function (NANO) {
     airlines: function(){
       return _.uniq(this.get_flights_values("airline"));
     },
+    alliances: function(){
+      return _.uniq(this.get_flights_values("alliance", true));
+    },
 
     airline: function(){
       return _(this.list()).chain().
@@ -223,6 +226,9 @@ NANO.plugin(function (NANO) {
     },
     airline: function(){
       return this.data.airline;
+    },
+    alliance: function(){
+      return NANO.airlines.get(this.airline()).alliance_name;
     },
     origin: function(){
       return this.data.origin;
