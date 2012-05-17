@@ -15,7 +15,7 @@ module NanoApi
     end
 
     def create
-      @search = Search.new(params[:search])
+      @search = Search.new(params[:search].is_a?(Hash) ? params[:search] : params)
       cookies[:ls] = @search.attributes_for_cookies.to_json
 
       search_result = @search.search(request.host)
