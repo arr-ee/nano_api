@@ -40,7 +40,7 @@ module NanoApi
     end
 
     def search host
-      Client.search(host, attributes_for_search)
+      Client.search(host, attributes_for_search.merge(:marker => marker))
     end
 
     [:search, :cookies].each do |postfix|
