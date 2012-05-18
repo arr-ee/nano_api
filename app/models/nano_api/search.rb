@@ -29,6 +29,8 @@ module NanoApi
           data.symbolize_keys!
           send "#{name}_name=", data[:name] if !send("#{name}_name?") && data.key?(:name)
           send "#{name}_iata=", data[:iata] if !send("#{name}_iata?") && data.key?(:iata)
+        else
+          send "#{name}_name=", data if !send("#{name}_name?")
         end
       end
     end
