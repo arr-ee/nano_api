@@ -6,7 +6,7 @@ module NanoApi
     before_filter :handle_marker, :only => :new
 
     def new
-      @search = Search.new(search_params)
+      @search = Search.new(default_search_params)
     end
 
     def show
@@ -15,8 +15,11 @@ module NanoApi
     end
 
     def create
-      @search = Search.new(params[:search].is_a?(Hash) ? params[:search] : params)
-      cookies[:ls] = @search.attributes_for_cookies.to_json
+      @search = Search.new(search_params)
+      cookies[:ls] = @search.attributes_for_cookies.slice(
+        'origin_name', 'origin_iata', 'destination_name', 'dstination_iata',
+        'depart_date', 'return_date', 'one_way'
+      ).to_json
 
       search_result = @search.search(request.host)
 
@@ -30,8 +33,11 @@ module NanoApi
   private
 
     def search_params
+      params[:search].is_a?(Hash) ? params[:search] : params
+    end
+
+    def default_search_params
       cookie_defaults = JSON.parse(cookies[:ls].presence) rescue {}
-      search_params = params[:search].is_a?(Hash) ? params[:search] : params
       user_location_attributes.merge(cookie_defaults).merge(search_params)
     end
 

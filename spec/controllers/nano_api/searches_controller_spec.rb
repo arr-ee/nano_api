@@ -94,7 +94,10 @@ describe NanoApi::SearchesController do
       response.body.should == '{tickets: [{test: 1}, {test: 2}]}'
     end
 
-    specify{cookies[:ls].should == assigns[:search].attributes_for_cookies.to_json}
+    specify{cookies[:ls].should == assigns[:search].attributes_for_cookies.slice(
+      'origin_name', 'origin_iata', 'destination_name', 'dstination_iata',
+      'depart_date', 'return_date', 'one_way'
+    ).to_json}
 
     it 'should pass params to api call'
     it 'should return json received from api'
