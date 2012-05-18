@@ -25,7 +25,7 @@ module NanoApi
             params_attributes: search_params
           }
         )
-      rescue RestClient::BadRequest, RestClient::Forbidden => exception
+      rescue RestClient::ResourceNotFound, RestClient::BadRequest, RestClient::Forbidden => exception
         [exception.http_body, exception.http_code]
       rescue RestClient::InternalServerError
         nil
