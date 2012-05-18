@@ -382,6 +382,11 @@ NANO.plugin(function (NANO) {
     _self: function(tickets, params){
       return new this._constructor(tickets, params);
     },
+    minimal_price: function(){
+      return _.min(this.list, function(ticket){
+        return ticket.minimal_price();
+      }).minimal_price();
+    },
     get: function(id){
       if(_.isString(id)){
         return _.detect(this.list, function(ticket){
