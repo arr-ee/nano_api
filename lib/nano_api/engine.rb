@@ -6,5 +6,9 @@ module NanoApi
     isolate_namespace NanoApi
 
     config.autoload_paths << root.join('lib')
+
+    config.action_dispatch.rescue_responses.merge!(
+      "RestClient::ResourceNotFound" => :not_found
+    )
   end
 end
