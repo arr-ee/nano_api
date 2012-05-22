@@ -256,13 +256,19 @@ NANO.plugin(function (NANO) {
   //добавляем сами билеты
   var Ticket = function(ticket_json, search){
     this.search = search;
-    this.id = _.uniqueId("ticket_");
+    var numbers = [];
     this._data = ticket_json;
     var self = this;
     _.each(["direct", "return"], function(direction){
       var name = direction + "_flights";
-      self[name] = ticket_json[name] ? new Flights(ticket_json[name], direction) : false;
+      if(ticket_json[name]){
+        var flights = new Flights(ticket_json[name], direction);
+        self[name] = flights;
+        numbers.push(flights.numbers().join(","));
+      }
     });
+    this.id = "ticket_" + numbers.join("-");
+
     _.each(this.init_stack, function(method_name){
       self[method_name]();
     });
