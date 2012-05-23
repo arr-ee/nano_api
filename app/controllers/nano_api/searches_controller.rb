@@ -17,8 +17,7 @@ module NanoApi
     def create
       @search = Search.new(search_params)
       cookies[:ls] = @search.attributes_for_cookies.slice(
-        'origin_name', 'origin_iata', 'destination_name', 'dstination_iata',
-        'depart_date', 'return_date', 'one_way'
+        'origin_name', 'origin_iata', 'destination_name', 'dstination_iata', 'one_way'
       ).to_json
 
       search_result = @search.search(request.host)

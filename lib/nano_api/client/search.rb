@@ -10,7 +10,6 @@ module NanoApi
 
       def search host, params
         params.symbolize_keys!
-        p params
         marker = api_client_marker(params[:marker])
         search_params = params.slice(*SEARCH_PARAMS_KEYS).inject({}) do |result, (key, value)|
           result[key] = value if value.present?
