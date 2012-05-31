@@ -278,8 +278,9 @@ NANO.plugin(function (NANO) {
     fn: Ticket.prototype,
     init_stack: [],
     memoize: [],
-    _default_url: function(url_id){
-      return '<%= NanoApi::Engine.routes.url_helpers.new_click_path %>?search_id=' + this.search.search_id + '&url_id=' + url_id;
+    _default_url: function(id){
+      var path = '<%= NanoApi::Engine.routes.url_helpers.search_click_path(':search_id', ':id') %>';
+      return path.replace(':search_id', this.search.search_id).replace(':id', id);
     },
     main_airline: function(){
       var direct_airline = this.direct_flights.airline();
