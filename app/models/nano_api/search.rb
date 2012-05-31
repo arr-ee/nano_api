@@ -39,8 +39,8 @@ module NanoApi
       return_date unless one_way
     end
 
-    def search host
-      Client.search(host, attributes_for_search.merge(:marker => marker))
+    def search host, options = {}
+      Client.search(host, attributes_for_search.merge(:marker => marker), options)
     end
 
     [:search, :cookies].each do |postfix|

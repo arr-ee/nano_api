@@ -8,7 +8,7 @@ module NanoApi
         trip_class range
       ].map(&:to_sym)
 
-      def search host, params
+      def search host, params, options = {}
         params.symbolize_keys!
         marker = api_client_marker(params[:marker])
         search_params = params.slice(*SEARCH_PARAMS_KEYS).inject({}) do |result, (key, value)|
@@ -16,7 +16,7 @@ module NanoApi
           result
         end
 
-        post_json('searches',
+        post('searches', {
           signature: api_client_signature(marker, search_params),
           enable_api_auth: true,
           search: {
@@ -24,7 +24,7 @@ module NanoApi
             marker: marker,
             params_attributes: search_params
           }
-        )
+        }, options.reverse_merge!(parse: false))
       rescue RestClient::ResourceNotFound, RestClient::BadRequest, RestClient::Forbidden => exception
         [exception.http_body, exception.http_code]
       rescue RestClient::InternalServerError

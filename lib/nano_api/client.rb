@@ -28,17 +28,16 @@ module NanoApi
         request :post, *args
       end
 
-      def get_json path, params = {}, options = {}
-        get(path, params, options.merge(parse_json: false))
+      def get_raw path, params = {}, options = {}
+        get path, params, options.merge(parse: false)
       end
 
-      def post_json path, params = {}, options = {}
-        post(path, params, options.merge(parse_json: false))
+      def post_raw path, params = {}, options = {}
+        post path, params, options.merge(parse: false)
       end
 
       def request method, path, params = {}, options = {}
-        options[:parse_json] = true unless options.key?(:parse_json)
-
+        options.reverse_merge!(parse: true)
         params = params.reverse_merge(locale: I18n.locale)
         path += '.json'
 
@@ -48,7 +47,7 @@ module NanoApi
         end
 
         response = site[path].send(method, params)
-        options[:parse_json] ? JSON.parse(response) : response
+        options[:parse] ? JSON.parse(response) : response
       end
 
       def site
