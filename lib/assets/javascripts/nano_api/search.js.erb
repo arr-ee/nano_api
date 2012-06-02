@@ -143,7 +143,7 @@ NANO.plugin(function (NANO) {
     memoize(this);
   };
   Flights.prototype = {
-    memoize: ['airlines', 'aircompany', 'duration', 'stops_count', 'stops_durations', 'stops_iatas'],
+    memoize: ['airlines', 'aircompany', 'duration', 'stops_count', 'stops_durations', 'stops_iatas', 'airline_duration'],
     get_flights_values: function(field_name, is_function, params){
       return _.map(this.flights, function(flight){
         return is_function ? flight[field_name].apply(flight, params) : flight.data[field_name];
@@ -173,23 +173,27 @@ NANO.plugin(function (NANO) {
       return _.uniq(this.get_flights_values("alliance", true));
     },
 
-    airline: function(){
+    airline_duration: function(){
       return _(this.list()).chain().
-        reduce(function(hash, flight){
-          var airc = flight.airline();
-          hash[airc] = hash.hasOwnProperty(airc) ? hash[airc] + flight.duration() : flight.duration();
-          return hash;
-        }, {}).
-        map(function(flight_duration, aircompany_iata){
-          return {
-            duration: flight_duration,
-            iata: aircompany_iata
-          };
-        }).
-        max(function(info){
-          return info.duration;
-        }).
-        value().iata;
+      reduce(function(hash, flight){
+        var airc = flight.airline();
+        hash[airc] = hash.hasOwnProperty(airc) ? hash[airc] + flight.duration() : flight.duration();
+        return hash;
+      }, {}).
+      map(function(flight_duration, aircompany_iata){
+        return {
+          duration: flight_duration,
+          iata: aircompany_iata
+        };
+      }).
+      max(function(info){
+        return info.duration;
+      }).
+      value();
+    },
+
+    airline: function(){
+      return this.airline_duration().iata;
     },
     depart_timestamp: function(){
       return this.flights[0].depart_timestamp();
@@ -283,11 +287,11 @@ NANO.plugin(function (NANO) {
       return path.replace(':search_id', this.search.search_id).replace(':id', id);
     },
     main_airline: function(){
-      var direct_airline = this.direct_flights.airline();
-      var return_airline = this.return_flights ? this.return_flights.airline() : {};
+      var direct_airline = this.direct_flights.airline_duration();
+      var return_airline = this.return_flights ? this.return_flights.airline_duration() : {};
       return _.max([direct_airline, return_airline], function(airline){
         return airline.duration;
-      });
+      }).iata;
     },
     send_gate_data: function(gate_id){
       if(!urls[id]){
