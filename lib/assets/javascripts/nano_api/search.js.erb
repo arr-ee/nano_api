@@ -272,6 +272,7 @@ NANO.plugin(function (NANO) {
       }
     });
     this.id = "ticket_" + numbers.join("-");
+    this.label = this._data.label;
 
     _.each(this.init_stack, function(method_name){
       self[method_name]();
