@@ -1,7 +1,7 @@
 # encoding: UTF-8
 require 'spec_helper'
 
-describe NanoApi::Model::Serializer do
+describe NanoApi::Model::Serializable do
 
   let(:klass) do
     Class.new do

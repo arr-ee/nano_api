@@ -1,7 +1,7 @@
 module NanoApi
   module Model
     module Attributable
-      include Serializer
+      include Serializable
       extend ActiveSupport::Concern
 
       included do
@@ -20,6 +20,9 @@ module NanoApi
 
           define_method name do
             read_attribute(name)
+          end
+          define_method "#{name}_before_type_cast" do
+            read_attribute_before_type_cast(name)
           end
           define_method "#{name}?" do
             read_attribute(name).present?
@@ -45,10 +48,14 @@ module NanoApi
       end
 
       def read_attribute name
+        @attributes[name]
+      end
+      alias_method :[], :read_attribute
+
+      def read_attribute_before_type_cast name
         type = self.class._attributes[name][:type]
         deserialize(@attributes[name], type)
       end
-      alias_method :[], :read_attribute
 
       def write_attribute name, value
         type = self.class._attributes[name][:type]
