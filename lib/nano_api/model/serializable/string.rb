@@ -1,4 +1,4 @@
-String.class_eval do
+class NanoApi::Model::Serializable::String
 
   def self.modelize value
     value.to_s if value.present?

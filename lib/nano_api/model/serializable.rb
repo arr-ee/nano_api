@@ -7,8 +7,8 @@ module NanoApi
 
       def normalize_type type
         type = type.to_s.camelize
-        type.safe_constantize ||
-          "NanoApi::Model::Serializable::#{type.to_s.camelize}".safe_constantize ||
+        "NanoApi::Model::Serializable::#{type.to_s.camelize}".safe_constantize ||
+          type.safe_constantize ||
           raise(UnknownAttribute.new('Unknown attribute type'))
       end
 
@@ -23,5 +23,3 @@ module NanoApi
     end
   end
 end
-
-Dir["#{File.dirname(__FILE__)}/serializable/**/*.rb"].each { |f| require f }

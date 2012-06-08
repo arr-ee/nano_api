@@ -1,4 +1,4 @@
-Integer.class_eval do
+class NanoApi::Model::Serializable::Integer
 
   def self.modelize value
     value.try(:to_i) if value.to_s =~ /\A\d+\Z/

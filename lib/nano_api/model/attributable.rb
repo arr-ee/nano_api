@@ -54,7 +54,7 @@ module NanoApi
 
       def read_attribute_before_type_cast name
         type = self.class._attributes[name][:type]
-        deserialize(@attributes[name], type)
+        deserialize(read_attribute(name), type)
       end
 
       def write_attribute name, value
