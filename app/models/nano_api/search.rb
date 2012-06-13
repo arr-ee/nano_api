@@ -13,7 +13,7 @@ module NanoApi
     attribute :range, type: :boolean, default: false
     attribute :one_way, type: :boolean, default: false
     attribute :trip_class, type: :integer, in: (0..2), default: 0
-    attribute :adults, type: :integer, in: (1..8), default: 1
+    attribute :adults, type: :integer, in: (1..9), default: 1
     attribute :children, type: :integer, in: (0..5), default: 0
     attribute :infants, type: :integer, in: (0..5), default: 0
 

@@ -14,6 +14,7 @@ module NanoApi
       include ActiveModel::Validations
       include ActiveModel::MassAssignmentSecurity
       include Attributable
+      include Collectionizable
       extend ActiveModel::Callbacks
       extend ActiveModel::Naming
       extend ActiveModel::Translation
@@ -31,6 +32,8 @@ module NanoApi
 
     module ClassMethods
       def instantiate attributes
+        return attributes if attributes.instance_of? self
+
         instance = allocate
 
         instance.instance_variable_set(:@attributes, initialize_attributes)
@@ -47,6 +50,10 @@ module NanoApi
 
     def persisted?
       !@new_record
+    end
+
+    def == other
+      attributes == other.attributes
     end
 
   private
