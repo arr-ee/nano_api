@@ -19,7 +19,7 @@ module NanoApi
         end
 
         def method_missing method, *args, &block
-          collectionize(current_scope).send(method, *args, &block) if collection_class.superclass.method_defined?(method)
+          current_scope.send(method, *args, &block) if collection_class.superclass.method_defined?(method)
         end
 
         def collectionize source
