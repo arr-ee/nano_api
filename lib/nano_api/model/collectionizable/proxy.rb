@@ -6,11 +6,11 @@ module NanoApi
 
         included do
           class_attribute :collectible
-        end
 
-        def initialize source
-          source ||= []
-          super source.map{|entity| collectible.instantiate(entity)}
+          def initialize source = nil
+            source ||= superclass.new
+            super source.map{|entity| collectible.instantiate(entity)}
+          end
         end
 
         def respond_to? method
@@ -27,6 +27,16 @@ module NanoApi
           result = yield
           collectible.current_scope = previous_scope
           result
+        end
+
+        module ClassMethods
+          def modelize value
+            new value
+          end
+
+          def demodelize value
+            []
+          end
         end
       end
     end

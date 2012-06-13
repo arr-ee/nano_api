@@ -13,7 +13,7 @@ describe NanoApi::Model::Collectionizable do
       end
 
       def self.no_mars
-        collectionize(scope.delete_if{|i| i.name == 'Mars'})
+        collectionize(delete_if{|i| i.name == 'Mars'})
       end
     end
   end

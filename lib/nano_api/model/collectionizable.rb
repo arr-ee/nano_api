@@ -15,11 +15,11 @@ module NanoApi
       module ClassMethods
 
         def respond_to? method
-          super || collection_class.superclass.respond_to?(method)
+          super || collection_class.superclass.method_defined?(method)
         end
 
         def method_missing method, *args, &block
-          collectionize(current_scope).send(method, *args, &block) if collection_class.superclass.respond_to?(method)
+          collectionize(current_scope).send(method, *args, &block) if collection_class.superclass.method_defined?(method)
         end
 
         def collectionize source
