@@ -36,6 +36,7 @@ NANO(function (NANO) {
     },
 
     create: function (json, complete) {
+      json.minimal_prices = {};
       var search_results = _.extend({}, json);
       var self = this;
       var worker = null;
@@ -46,7 +47,9 @@ NANO(function (NANO) {
           data: search_results[field_name] || [],
           after: function(results){
             if(Collection){
-              return new Collection(results);
+              return new Collection(results, {
+                search_id: search_results.search_id
+              });
             }
             return results;
           },
@@ -74,6 +77,7 @@ NANO(function (NANO) {
             callback(search_results);
           });
           complete(search_results);
+          window.CURRENT_SEARCH = search_results;
         }
       });
 
@@ -115,7 +119,77 @@ NANO(function (NANO) {
     return NANO.airports;
   });
   search.collection("closest_cities", Data);
-  search.collection("minimal_prices", Data);
+
+
+  var MinimalPrices = function(data, search_params){
+    this.search_id = search_params.search_id;
+  };
+  MinimalPrices.prototype = {
+    _cache: {
+      _storage: {
+        week: {},
+        month: {}
+      },
+      week: function(params, data){
+        var key = [params.depart_date, params.return_date].join("|");
+        if(!data){
+          return this._storage.week[key];
+        }else {
+          this._storage.week[key] = data;
+        }
+      },
+      month: function(params, data){
+        var key = params.month;
+        if(!data){
+          return this._storage.month[key];
+        }else {
+          this._storage.month[key] = data;
+        }
+      }
+    },
+    _request: function(params, type){
+      var cached = this._cache[type](params.data);
+      if(cached){
+        return NANO.set_zero_timeout(function(){
+          params.success(cached);
+        });
+      } else {
+        var self = this;
+        var success = params.success;
+        params.success = function(data){
+          self._cache[type](params.data, data);
+          success(data);
+        }
+      }
+      NANO.ajax(_.extend({
+        dataType: 'json',
+        url: NANO.routes[type + "_minimal_prices"]
+      }, params));
+    },
+    month: function(month, success, error){
+      this._request({
+        data: {
+          search_id: this.search_id,
+          month: month
+        },
+        success: success,
+        error: error
+      }, "month");
+    },
+    week: function(depart_date, return_date, success, error){
+       this._request({
+        data: {
+          search_id: this.search_id,
+          depart_date: depart_date,
+          return_date: return_date
+        },
+        success: success,
+        error: error
+      }, "week");
+    }
+  };
+
+  search.collection("minimal_prices", MinimalPrices);
   search.collection("params_attributes", Data);
   search.collection("request_params", Data);
 
