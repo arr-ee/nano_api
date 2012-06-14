@@ -13,6 +13,10 @@ module NanoApi
       include ActiveModel::Dirty
       include ActiveModel::Validations
       include ActiveModel::MassAssignmentSecurity
+      include ActiveModel::Serialization
+      include ActiveModel::Serializers::JSON
+      include ActiveModel::Serializers::Xml
+
       include Attributable
       include Collectionizable
       extend ActiveModel::Callbacks
@@ -53,7 +57,7 @@ module NanoApi
     end
 
     def == other
-      other.instance_of?(self.class) && attributes == other.attributes
+      other.instance_of?(self.class) && other.attributes == attributes
     end
 
   private
