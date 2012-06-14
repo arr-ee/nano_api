@@ -11,6 +11,7 @@ describe NanoApi::Model::Serializable do
       attribute :string, type: :string
       attribute :integer, type: :integer
       attribute :boolean, type: :boolean
+      attribute :array, type: :array
 
       def initialize name = nil
         @attributes = self.class.initialize_attributes
@@ -48,6 +49,12 @@ describe NanoApi::Model::Serializable do
     specify{subject.tap{|s| s.boolean = 0}.boolean.should == false}
     specify{subject.tap{|s| s.boolean = nil}.boolean.should == nil}
     specify{subject.tap{|s| s.boolean = [123]}.boolean.should == nil}
+  end
+
+  context 'array' do
+    specify{subject.tap{|s| s.array = [1, 2, 3]}.array.should == [1, 2, 3]}
+    specify{subject.tap{|s| s.array = 'hello, world'}.array.should == ['hello', 'world']}
+    specify{subject.tap{|s| s.array = 10}.array.should == nil}
   end
 
 end
