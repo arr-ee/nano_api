@@ -53,7 +53,7 @@ module NanoApi
     end
 
     def == other
-      attributes == other.attributes
+      other.instance_of?(self.class) && attributes == other.attributes
     end
 
   private
