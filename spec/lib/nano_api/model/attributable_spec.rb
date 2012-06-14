@@ -21,6 +21,7 @@ describe NanoApi::Model::Attributable do
 
   context do
     subject{klass.new('world')}
+    its(:attributes){should == {"hello"=>nil, "count"=>10, "calc"=>5}}
     its(:name){should == 'world'}
     its(:hello){should be_nil}
     its(:count){should == 10}

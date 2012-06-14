@@ -64,7 +64,7 @@ module NanoApi
       alias_method :[]=, :write_attribute
 
       def attributes
-        Hash[attribute_names.map { |name| [name, send(name)] }]
+        ::Hash[attribute_names.map { |name| [name, send(name)] }]
       end
 
       def attribute_names
