@@ -8,7 +8,7 @@ module NanoApi
           class_attribute :collectible
 
           def initialize source = nil
-            source ||= superclass.new
+            source ||= []
             super source.map{|entity| collectible.instantiate(entity)}
           end
         end

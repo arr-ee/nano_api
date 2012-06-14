@@ -21,6 +21,7 @@ describe NanoApi::Model::Collectionizable do
 
   specify{klass.const_defined?('Collection').should be_true}
   specify{klass.const_get('Collection').collectible.should == klass}
+  specify{klass.const_get('Collection').new.should be_empty}
 
   specify{collection.should be_instance_of klass.collection_class}
   specify{collection.except_first.should be_instance_of klass.collection_class}
