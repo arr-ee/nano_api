@@ -270,7 +270,7 @@ NANO(function (NANO) {
       return this.airline_duration().iata;
     },
     depart_timestamp: function(){
-      return this.flights[0].depart_timestamp();
+      return this.flights[0] ? this.flights[0].depart_timestamp() : null;
     },
     arrival_timestamp: function(){
       return _.last(this.flights).arrival_timestamp();
