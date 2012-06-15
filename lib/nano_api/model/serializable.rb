@@ -1,3 +1,5 @@
+require 'nano_api/model/serializable/core'
+
 module NanoApi
   module Model
     module Serializable

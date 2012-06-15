@@ -95,7 +95,7 @@ describe NanoApi::SearchesController do
     end
 
     specify{cookies[:ls].should == assigns[:search].attributes_for_cookies.slice(
-      'origin_name', 'origin_iata', 'destination_name', 'dstination_iata', 'one_way'
+      'origin_name', 'origin_iata', 'destination_name', 'destination_iata', 'one_way'
     ).to_json}
 
     it 'should pass params to api call'
