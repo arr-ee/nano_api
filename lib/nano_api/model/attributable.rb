@@ -7,6 +7,8 @@ module NanoApi
       included do
         class_attribute :_attributes, :instance_reader => false, :instance_writer => false
         self._attributes = ActiveSupport::HashWithIndifferentAccess.new
+
+        delegate :attribute_default, :to => 'self.class'
       end
 
       module ClassMethods
@@ -38,17 +40,21 @@ module NanoApi
           end
         end
 
+        def attribute_default name
+          default = _attributes[name][:default]
+          default.respond_to?(:call) ? default.call : default
+        end
+
         def initialize_attributes
           _attributes.inject(ActiveSupport::HashWithIndifferentAccess.new) do |result, (name, value)|
-            default = value[:default]
-            result[name] = default.respond_to?(:call) ? default.call : default
+            result[name] = nil
             result
           end
         end
       end
 
       def read_attribute name
-        @attributes[name]
+        @attributes[name].nil? ? attribute_default(name) : @attributes[name]
       end
       alias_method :[], :read_attribute
 
