@@ -52,9 +52,9 @@ module NanoApi
     end
 
     def self.find id
-      hash = Client.search_params(id)
-      raise NanoApi::Model::NotFound unless hash
-      new(hash)
+      attributes = Client.search_params(id)
+      raise NanoApi::Model::NotFound unless attributes
+      new(attributes)
     end
 
   end
