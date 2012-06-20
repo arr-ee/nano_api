@@ -18,7 +18,7 @@ class NanoApi::Backends::SearchesController < NanoApi::ApplicationController
   def create
     @search = NanoApi::Search.new(search_params)
     cookies[:ls] = @search.attributes_for_cookies.slice(
-      'origin_name', 'origin_iata', 'destination_name', 'destination_iata', 'one_way'
+      'origin_name', 'origin_iata', 'destination_name', 'destination_iata'
     ).to_json
 
     search_result = @search.search(request.host)
