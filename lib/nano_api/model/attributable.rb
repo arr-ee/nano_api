@@ -81,6 +81,10 @@ module NanoApi
         assign_attributes(attributes)
       end
 
+      def update_attributes attributes
+        self.attributes = attributes
+      end
+
     private
 
       def assign_attributes attributes

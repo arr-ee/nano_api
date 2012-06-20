@@ -5,7 +5,9 @@ class NanoApi::Backends::SearchesController < NanoApi::ApplicationController
   before_filter :handle_marker, :only => :new
 
   def new
-    @search = NanoApi::Search.new(default_search_params)
+    @search = NanoApi::Search.new(user_location_attributes)
+    @search.update_attributes(cookie_params)
+    @search.update_attributes(search_params)
   end
 
   def show
@@ -34,8 +36,7 @@ private
     params[:search].is_a?(Hash) ? params[:search] : params
   end
 
-  def default_search_params
-    cookie_defaults = JSON.parse(cookies[:ls].presence) rescue {}
-    user_location_attributes.merge(cookie_defaults).merge(search_params)
+  def cookie_params
+    JSON.parse(cookies[:ls].presence) rescue {}
   end
 end
