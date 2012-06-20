@@ -49,3 +49,13 @@ String.class_eval do
     value
   end
 end
+
+Date.class_eval do
+  def self.modelize value
+    Date.parse(value.to_s) rescue nil
+  end
+
+  def self.demodelize value
+    value.to_s
+  end
+end

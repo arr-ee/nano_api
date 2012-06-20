@@ -12,14 +12,6 @@ describe NanoApi::Search do
     end
     context 'string value' do
       before{search.origin = 'Hello'}
-      specify{search.origin_name.should == 'Moscow'}
-      specify{search.origin_iata.should be_nil}
-    end
-    context 'string value' do
-      before{
-        search.origin_name = nil
-        search.origin = 'Hello'
-      }
       specify{search.origin_name.should == 'Hello'}
       specify{search.origin_iata.should be_nil}
     end
@@ -35,14 +27,6 @@ describe NanoApi::Search do
     end
     context 'string value' do
       before{search.destination = 'Hello'}
-      specify{search.destination_name.should == 'London'}
-      specify{search.destination_iata.should be_nil}
-    end
-    context 'string value' do
-      before{
-        search.destination_name = nil
-        search.destination = 'Hello'
-      }
       specify{search.destination_name.should == 'Hello'}
       specify{search.destination_iata.should be_nil}
     end

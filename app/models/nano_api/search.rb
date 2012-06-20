@@ -8,8 +8,8 @@ module NanoApi
     attribute :origin_name
     attribute :destination_iata
     attribute :destination_name
-    attribute(:depart_date){Date.current + 2.weeks}
-    attribute(:return_date){Date.current + 3.weeks}
+    attribute(:depart_date, type: :date){Date.current + 2.weeks}
+    attribute(:return_date, type: :date){Date.current + 3.weeks}
     attribute :range, type: :boolean, default: false
     attribute :one_way, type: :boolean, default: false
     attribute :trip_class, type: :integer, in: (0..2), default: 0
@@ -18,6 +18,7 @@ module NanoApi
     attribute :infants, type: :integer, in: (0..5), default: 0
 
     attr_accessor :marker
+    alias_method :oneway=, :one_way=
 
     def passengers
       [adults, children, infants].sum
@@ -30,7 +31,7 @@ module NanoApi
           send "#{name}_name=", data[:name] if !send("#{name}_name?") && data.key?(:name)
           send "#{name}_iata=", data[:iata] if !send("#{name}_iata?") && data.key?(:iata)
         else
-          send "#{name}_name=", data if !send("#{name}_name?")
+          send "#{name}_name=", data
         end
       end
     end

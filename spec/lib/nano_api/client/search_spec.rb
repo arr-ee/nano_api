@@ -61,13 +61,11 @@ describe NanoApi::Client do
     let(:path){'searches/984657.json'}
 
     before do
-      FakeWeb.register_uri :get, fake, body: '{"search": {"params_attributes": {"origin": "MOW"}}}'
+      FakeWeb.register_uri :get, fake, body: '{"origin": "MOW"}'
     end
 
     it 'should return params of search with given id, returned from api' do
-      subject.search_params(984657).should == {
-        'search' =>  {'params_attributes' => {'origin' => 'MOW'}}
-      }
+      subject.search_params(984657).should == {'origin' => 'MOW', 'one_way' => true}
     end
   end
 
