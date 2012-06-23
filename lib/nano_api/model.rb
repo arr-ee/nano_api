@@ -1,3 +1,5 @@
+require 'nano_api/model/extensions'
+
 module NanoApi
   module Model
     class NotFound < ::StandardError

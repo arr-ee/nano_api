@@ -29,13 +29,13 @@ module NanoApi
           result
         end
 
+        def demodelize
+          ''
+        end
+
         module ClassMethods
           def modelize value
             new value
-          end
-
-          def demodelize value
-            []
           end
         end
       end

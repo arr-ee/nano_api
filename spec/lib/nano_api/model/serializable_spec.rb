@@ -8,10 +8,10 @@ describe NanoApi::Model::Serializable do
       include NanoApi::Model::Attributable
       attr_reader :name
 
-      attribute :string, type: :string
-      attribute :integer, type: :integer
-      attribute :boolean, type: :boolean
-      attribute :array, type: :array
+      attribute :string, type: String
+      attribute :integer, type: Integer
+      attribute :boolean, type: Boolean
+      attribute :array, type: Array
 
       def initialize name = nil
         @attributes = self.class.initialize_attributes

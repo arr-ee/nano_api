@@ -14,7 +14,7 @@ module NanoApi
       module ClassMethods
         def attribute name, options = {}, &block
           default = options.is_a?(Hash) ? options[:default] : options
-          type = options.is_a?(Hash) ? (options[:type].try(:to_sym) || :string) : :string
+          type = options.is_a?(Hash) ? normalize_type(options[:type]) : String
           self._attributes = self._attributes.merge(name => {
             default: (block || default),
             type: type
@@ -40,6 +40,17 @@ module NanoApi
           end
         end
 
+        def normalize_type type
+          case type
+          when String, Symbol then
+            type.to_s.camelize.safe_constantize
+          when nil then
+            String
+          else
+            type
+          end
+        end
+
         def attribute_default name
           default = _attributes[name][:default]
           default.respond_to?(:call) ? default.call : default
@@ -59,8 +70,7 @@ module NanoApi
       alias_method :[], :read_attribute
 
       def read_attribute_before_type_cast name
-        type = self.class._attributes[name][:type]
-        deserialize(send(name), type)
+        deserialize(send(name))
       end
 
       def write_attribute name, value
