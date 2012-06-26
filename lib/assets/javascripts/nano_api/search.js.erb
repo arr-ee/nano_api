@@ -219,8 +219,14 @@ NANO(function (NANO) {
   Flights.prototype = {
     memoize: ['airlines', 'aircompany', 'duration', 'stops_count', 'stops_durations', 'stops_iatas', 'airline_duration'],
     get_flights_values: function(field_name, is_function, params){
+      is_function = !!is_function;
+      params = params || [];
       return _.map(this.flights, function(flight){
-        return is_function ? flight[field_name].apply(flight, params) : flight.data[field_name];
+        if(is_function){
+          return flight[field_name].apply(flight, params);
+        }else {
+          return flight.data[field_name];
+        }
       });
     },
     list: function(){
