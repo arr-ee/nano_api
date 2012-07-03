@@ -7,5 +7,9 @@ module NanoApi
     def month
       forward_json Client.month_minimal_prices(params[:search_id], params[:month])
     end
+
+    def nearest
+      forward_json Client.nearest_cities_prices(params[:search_id])
+    end
   end
 end

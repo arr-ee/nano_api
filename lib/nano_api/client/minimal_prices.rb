@@ -10,6 +10,10 @@ module NanoApi
       def month_minimal_prices search_id, month = nil
         get_raw('month_minimal_prices', search_id: search_id, month: month)
       end
+
+      def nearest_cities_prices search_id
+        get_raw('nearest_cities_prices', search_id: search_id)
+      end
     end
   end
 end

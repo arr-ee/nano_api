@@ -40,5 +40,19 @@ describe NanoApi::Client do
         subject.month_minimal_prices(search, month).should == '[price_1, price_2]'
       end
     end
+
+    context 'nearest' do
+      let(:params){{
+        search_id: search
+      }}
+      let(:path){'nearest_cities_prices.json'}
+      before do
+        FakeWeb.register_uri :get, fake, body: '[price_1, price_2]'
+      end
+
+      it 'should return json received from api call' do
+        subject.nearest_cities_prices(search).should == '[price_1, price_2]'
+      end
+    end
   end
 end
