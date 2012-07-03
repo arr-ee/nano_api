@@ -18,7 +18,7 @@ describe NanoApi::Client do
         rest_client.stub(:[]).with('searches.json').and_return(action)
         action.should_receive(:post).with hash_including(
           signature: 'test_signature',
-          search: {host: 'test.search.te', marker: 'test', params_attributes: {origin_iata: 'LED'}}
+          search: {host: 'test.search.te', marker: 'test', user_ip: nil, params_attributes: {origin_iata: 'LED'}}
         )
 
         subject.search('test.search.te', marker: 'test', origin_iata: 'LED')
