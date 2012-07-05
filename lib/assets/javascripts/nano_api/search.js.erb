@@ -180,8 +180,8 @@ NANO(function (NANO) {
        this._request({
         data: {
           search_id: this.search_id,
-          depart_date: params.depart_date,
-          return_date: params.return_date
+          direct_date: +new Date(params.depart_date) / 1000,
+          return_date: +new Date(params.return_date) / 1000
         },
         success: success,
         error: error
