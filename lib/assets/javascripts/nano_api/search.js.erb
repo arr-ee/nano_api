@@ -160,28 +160,28 @@ NANO(function (NANO) {
           self._cache[type](params.data, data);
           success(data);
         }
+        NANO.ajax(_.extend({
+          dataType: 'json',
+          url: NANO.routes[type + "_minimal_prices"]
+        }, params));
       }
-      NANO.ajax(_.extend({
-        dataType: 'json',
-        url: NANO.routes[type + "_minimal_prices"]
-      }, params));
     },
-    month: function(month, success, error){
+    month: function(params, success, error){
       this._request({
         data: {
           search_id: this.search_id,
-          month: month
+          month: params.month
         },
         success: success,
         error: error
       }, "month");
     },
-    week: function(depart_date, return_date, success, error){
+    week: function(params, success, error){
        this._request({
         data: {
           search_id: this.search_id,
-          depart_date: depart_date,
-          return_date: return_date
+          depart_date: params.depart_date,
+          return_date: params.return_date
         },
         success: success,
         error: error
