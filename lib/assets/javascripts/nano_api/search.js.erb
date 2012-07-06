@@ -131,7 +131,7 @@ NANO(function (NANO) {
         month: {}
       },
       week: function(params, data){
-        var key = [params.depart_date, params.return_date].join("|");
+        var key = _.map(params, function(value){return value}).join("|");
         if(!data){
           return this._storage.week[key];
         }else {
