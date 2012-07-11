@@ -11,7 +11,7 @@ NANO(function (NANO) {
       "currency_rates",
       "gates_info",
       "metadata",
-      "nearest_cities"
+      "nearest_cities",
       "minimal_prices",
       "params_attributes",
       "request_params",
@@ -23,7 +23,7 @@ NANO(function (NANO) {
       var request_params = {};
       var ajax_params = {
         url: NANO.routes.search_path,
-        type: NANO.routes.search_method,
+        type: search_data.method,
         dataType: 'json',
         data: search_data.data,
         success: function(data){

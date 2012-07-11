@@ -1,0 +1,18 @@
+NANO(function(NANO){
+  var routes = {};
+  <%
+    helpers = NanoApi::Engine.routes.url_helpers
+    routes = {
+      search_path: helpers.searches_path(format: :json),
+      click_path: helpers.new_click_path(format: :json),
+      autocomplete_path: helpers.places_path(format: :json),
+      week_minimal_prices: helpers.week_minimal_prices_path(format: :json),
+      month_minimal_prices: helpers.month_minimal_prices_path(format: :json),
+      nearest_cities_prices: helpers.nearest_cities_prices_path(format: :json)
+    }
+  %>
+  <% routes.each do |name, path| %>
+    routes['<%= name %>'] = '<%= path %>';
+  <% end %>
+  NANO.routes = routes;
+});
