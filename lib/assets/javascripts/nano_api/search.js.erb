@@ -139,10 +139,10 @@ NANO(function (NANO) {
         }
       },
       month: function(params, data){
-        var key = params.month;
+        var key = _.map(params, function(value){return value}).join("|");
         if(!data){
           return this._storage.month[key];
-        }else {
+        } else {
           this._storage.month[key] = data;
         }
       }
@@ -157,13 +157,75 @@ NANO(function (NANO) {
         var self = this;
         var success = params.success;
         params.success = function(data){
-          self._cache[type](params.data, data);
-          success(data);
+          self._prepare_data[type](data, function(prepared_data){
+            self._cache[type](params.data, prepared_data);
+            success(prepared_data);
+          });
         }
         NANO.ajax(_.extend({
           dataType: 'json',
           url: NANO.routes[type + "_minimal_prices"]
         }, params));
+      }
+    },
+    _prepare_data: {
+      month: function(data, ready){
+        var month = data.month.split("-");
+        month[1] = +month[1];
+        month[2] = 0;
+        var month_days_quantity = new Date(Date.UTC.apply(Date.UTC, month)).getDate();
+        var days_needed = month_days_quantity - data.values.length;
+        while(0 < days_needed){
+          data.values.unshift(null);
+          days_needed--;
+        }
+
+        NANO.asyncWorker({
+          data: data.values,
+          iterator: function(day_data){
+            if(day_data === null || _.isEmpty(day_data)){
+              return null;
+            }
+            return day_data;
+          },
+          complete: function(ready_values){
+            data.values = ready_values;
+            ready(data);
+          }
+        });
+      },
+      week: function(data, ready){
+        var async_worker = null;
+        _.each(data.values, function(week_values, index){
+          var asyc_data = {
+            data: week_values,
+            iterator: function(day_value){
+              if(day_value === null){
+                return null;
+              }
+              var day_data = {};
+              _.each(day_value, function(value, stops_count){
+                day_data[stops_count] = {
+                  value: value
+                };
+              });
+              return day_data;
+            },
+            complete: function(result){
+              data.values[index] = result;
+            }
+          };
+          if(!async_worker){
+            async_worker = NANO.asyncWorker(asyc_data);
+          }else{
+            async_worker.then(asyc_data);
+          }
+        }); 
+
+        async_worker.then({
+          data: data,
+          complete: ready
+        });
       }
     },
     month: function(params, success, error){
