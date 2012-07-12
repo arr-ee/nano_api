@@ -418,23 +418,24 @@ NANO(function (NANO) {
       }
     }
   };
+
+  var AirlineDeeplink = function(){};
+
   //добавляем сами билеты
   var Ticket = function(ticket_json, search){
     this.search = search;
-    var numbers = [];
     this._data = ticket_json;
+    this.label = this._data.label;
     var self = this;
     _.each(["direct", "return"], function(direction){
       var name = direction + "_flights";
       if(ticket_json[name] && 0 < ticket_json[name].length){
-        var flights = new Flights(ticket_json[name], direction);
-        self[name] = flights;
-        numbers.push(flights.numbers().join(","));
+        self[name] = new Flights(ticket_json[name], direction);
       }
     });
-    this.id = "ticket_" + numbers.join("-");
-    this.label = this._data.label;
 
+    this.id = "ticket_" + this.flight_numbers().join("-");
+    
     _.each(this.init_stack, function(method_name){
       self[method_name]();
     });
@@ -447,6 +448,15 @@ NANO(function (NANO) {
     _default_url: function(id){
       var path = '<%= NanoApi::Engine.routes.url_helpers.search_click_path(':search_id', ':id') %>';
       return path.replace(':search_id', this.search.search_id).replace(':id', id);
+    },
+    flight_numbers: function(){
+      var self = this;
+      return _.map(["direct", "return"], function(direction){
+        var flights = self[direction + "_flights"];
+        if(flights){
+          return flights.numbers().join(",");
+        }
+      });
     },
     main_airline: function(){
       var direct_airline = this.direct_flights.airline_duration();
@@ -472,6 +482,49 @@ NANO(function (NANO) {
           }
         }
       });
+    },
+    airline_deeplink: function(){
+      var airline_gate = _.chain(this.gates()).
+        detect(function(gate){
+          return gate.is_airline;
+        }).
+        min(function(date){
+          return gate.default_currency_price.value;
+        }).
+        value();
+
+      if(airline_gate){
+        return {
+          type: "gate",
+          url: airline_gate.url,
+          price: airline_gate.price
+        };
+      }
+      var main_airline = NANO.airlines.get(this.main_airline());
+      if(main_airline.deeplink_id){
+        return {
+          type: "deeplink",
+          url: "/airline_deeplinks/" + main_airline.deeplink_id + "?" + this._deeplink_request_params(),
+          price: null
+        };
+      }
+      return false;
+    },
+    _deeplink_request_params: function(){
+      var params = {
+        search_id: this.search.search_id,
+        origin: this.direct_flights.origin(),
+        destination: this.direct_flights.destination(),
+        depart_date: this.direct_flights.depart_timestamp(),
+        flight_numbers: this.flight_numbers().join(";")
+      };
+      if(this.return_flights){
+        params.return_date = this.return_flights.depart_timestamp();
+      }
+      _.each(["depart_date", "return_date"], function(name){
+        params[name] = GC.dates_formatter.server_request(params[name]);
+      });
+      return GC.params.encode(params);
     },
     gates: function(){
       var ticket_gates = [];
