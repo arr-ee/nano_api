@@ -119,12 +119,12 @@ NANO(function (NANO) {
     return NANO.airports;
   });
 
-  var NearestCities = function(data, search_id){
-    this.search_id = search_id;
+  var NearestCities = function(data, info){
+    this.search_id = info.search_id;
   };
   NearestCities.prototype = {
     get: function(success, error){
-      NANO.ajax(_.extend({
+      var ajax_data = _.extend({
         dataType: 'json',
         url: NANO.routes.nearest_cities_prices
       }, {
@@ -133,11 +133,12 @@ NANO(function (NANO) {
         },
         success: success,
         error: error
-      }));
+      });
+      NANO.ajax(ajax_data);
     }
   };
 
-  search.collection("nearest_cities_prices", Data);
+  search.collection("nearest_cities_prices", NearestCities);
 
   var MinimalPrices = function(data, search_params){
     this.search_id = search_params.search_id;
