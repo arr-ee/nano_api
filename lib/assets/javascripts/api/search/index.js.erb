@@ -1,5 +1,16 @@
-NANO(function (NANO) {
-  var search = NANO.search = {
+//= require utils/worker
+//= require utils/ajax
+//= require api/routes
+//= require api/airports
+//= require api/airlines
+//= require api/currency
+//= require api/gates
+
+//= require api/search/filter
+//= require api/search/sort
+
+NANO("api.search", function (NANO) {
+  var search = {
 
     _each: {},
     _collection: {},
@@ -22,7 +33,7 @@ NANO(function (NANO) {
       var self = this;
       var request_params = {};
       var ajax_params = {
-        url: NANO.routes.search_path,
+        url: NANO.api.routes.search_path,
         type: search_data.method,
         dataType: 'json',
         data: search_data.data,
@@ -32,7 +43,7 @@ NANO(function (NANO) {
         },
         error: search_data.error
       };
-      NANO.ajax(ajax_params);
+      NANO.utils.ajax(ajax_params);
     },
 
     create: function (json, complete) {
@@ -64,7 +75,7 @@ NANO(function (NANO) {
           };
         }
         if(!worker){
-          worker = NANO.asyncWorker(params);
+          worker = NANO.utils.worker(params);
         }else{
           worker = worker.then(params);
         }
@@ -111,12 +122,12 @@ NANO(function (NANO) {
   };
 
   search.collection("airlines", function(airlines){
-    NANO.airlines.update(airlines);
-    return NANO.airlines;
+    NANO.api.airlines.update(airlines);
+    return NANO.api.airlines;
   });
   search.collection("airports", function(airports){
-    NANO.airports.update(airports);
-    return NANO.airports;
+    NANO.api.airports.update(airports);
+    return NANO.api.airports;
   });
 
   var NearestCities = function(data, info){
@@ -126,7 +137,7 @@ NANO(function (NANO) {
     get: function(success, error){
       var ajax_data = _.extend({
         dataType: 'json',
-        url: NANO.routes.nearest_cities_prices
+        url: NANO.api.routes.nearest_cities_prices
       }, {
         data: {
           search_id: this.search_id
@@ -134,7 +145,7 @@ NANO(function (NANO) {
         success: success,
         error: error
       });
-      NANO.ajax(ajax_data);
+      NANO.utils.ajax(ajax_data);
     }
   };
 
@@ -181,9 +192,9 @@ NANO(function (NANO) {
             success(prepared_data);
           });
         }
-        NANO.ajax(_.extend({
+        NANO.utils.ajax(_.extend({
           dataType: 'json',
-          url: NANO.routes[type + "_minimal_prices"]
+          url: NANO.api.routes[type + "_minimal_prices"]
         }, params));
       }
     },
@@ -199,7 +210,7 @@ NANO(function (NANO) {
           days_needed--;
         }
 
-        NANO.asyncWorker({
+        NANO.utils.worker({
           data: data.values,
           iterator: function(day_data){
             if(day_data === null || _.isEmpty(day_data)){
@@ -235,7 +246,7 @@ NANO(function (NANO) {
             }
           };
           if(!async_worker){
-            async_worker = NANO.asyncWorker(asyc_data);
+            async_worker = NANO.utils.worker(asyc_data);
           }else{
             async_worker.then(asyc_data);
           }
@@ -275,13 +286,13 @@ NANO(function (NANO) {
   search.collection("request_params", Data);
 
   search.collection("currency_rates", function(rates){
-    NANO.currency.update_rates(rates);
+    NANO.api.currency.update_rates(rates);
     return rates;
   });
 
   search.collection("gates_info", function(gates_info){
-    NANO.gates.update(gates_info);
-    return NANO.gates;
+    NANO.api.gates.update(gates_info);
+    return NANO.api.gates;
   });
 
   var memoize = function(this_object){
@@ -393,7 +404,7 @@ NANO(function (NANO) {
       return this.data.airline;
     },
     alliance: function(){
-      return NANO.airlines.get(this.airline()).alliance_name;
+      return NANO.api.airlines.get(this.airline()).alliance_name;
     },
     origin: function(){
       return this.data.origin;
@@ -419,7 +430,6 @@ NANO(function (NANO) {
     }
   };
 
-  var AirlineDeeplink = function(){};
 
   //добавляем сами билеты
   var Ticket = function(ticket_json, search){
@@ -472,13 +482,13 @@ NANO(function (NANO) {
       var gate = _.detect(this.gates(), function(gate){
         return gate.id === gate_id;
       });
-      NANO.ajax({
+      NANO.utils.ajax({
         url: this._default_url(gate.url_id) + '.js',
         type: "get",
         data: {
           click: {
             gate_id: gate.id,
-            proposal_price: NANO.currency.to_default(gate.price)
+            proposal_price: NANO.api.currency.to_default(gate.price)
           }
         }
       });
@@ -500,7 +510,7 @@ NANO(function (NANO) {
           price: airline_gate.price
         };
       }
-      var main_airline = NANO.airlines.get(this.main_airline());
+      var main_airline = NANO.api.airlines.get(this.main_airline());
       if(main_airline.deeplink_id){
         return {
           type: "deeplink",
@@ -547,7 +557,7 @@ NANO(function (NANO) {
             currency: gate.currency_code,
             value: prices[id]
           },
-          default_currency_price: NANO.currency.to_default(prices[id], gate.currency_code)
+          default_currency_price: NANO.api.currency.to_default(prices[id], gate.currency_code)
         };
         if(urls && urls[id]){
           gate_data.url = urls[id] + "|" + search.params.search.marker;
@@ -629,4 +639,7 @@ NANO(function (NANO) {
     }
   };
   search.collection("tickets", Tickets);
+  return search;
+}, {
+  require: ["api.routes", "utils.worker", "utils.ajax", "api.airports", "api.airlines", "api.currency", "api.gates"]
 });

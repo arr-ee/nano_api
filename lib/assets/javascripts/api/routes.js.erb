@@ -1,4 +1,4 @@
-NANO(function(NANO){
+NANO("api.routes", function(NANO){
   var routes = {};
   <%
     helpers = NanoApi::Engine.routes.url_helpers
@@ -14,5 +14,5 @@ NANO(function(NANO){
   <% routes.each do |name, path| %>
     routes['<%= name %>'] = '<%= path %>';
   <% end %>
-  NANO.routes = routes;
+  return routes;
 });
