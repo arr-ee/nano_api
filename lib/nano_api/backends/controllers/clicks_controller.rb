@@ -11,4 +11,17 @@ class NanoApi::Backends::ClicksController < NanoApi::ApplicationController
       redirect_to new_search_url
     end
   end
+
+  def link
+    @link_params = NanoApi::Client.link(params[:search_id], params[:id])
+    redirect_to @link_params.try(:[], :url).presence || new_search_url
+  end
+
+  def deeplink
+    if @deeplink_params = NanoApi::Client.deeplink(params[:search_id], params[:id], params.except(:id, :search_id))
+      render 'deeplink', stream: true
+    else
+      redirect_to new_search_url
+    end
+  end
 end

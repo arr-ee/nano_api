@@ -1,0 +1,15 @@
+<% if 'get' == @deeplink_params[:method] and @deeplink_params[:params].empty? %>
+  <script type="text/javascript">
+    window.location.href = '<%=raw @deeplink_params[:url] %>';
+  </script>
+<% else %>
+  <%= form_tag @deeplink_params[:url], method: @deeplink_params[:method], id: 'nano_api_deeplink_form' do %>
+    <% (@deeplink_params[:params] || []).each do |key, value| %>
+      <%= hidden_field_tag key, h(value) %>
+    <% end %>
+  <% end %>
+
+  <script type="text/javascript">
+    document.getElementById('nano_api_deeplink_form').submit();
+  </script>
+<% end %>
