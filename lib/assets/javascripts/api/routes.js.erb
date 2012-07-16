@@ -1,5 +1,22 @@
 NANO("api.routes", function(NANO){
-  var routes = {};
+  var interpolate = /:(\w+)/g;
+  var routes = function(route_name, params){
+    if(_.isString(params)){
+      return routes[route_name] + "?" + params;
+    }
+    var cloned_params = _.clone(params);
+    var route = routes[route_name].replace(interpolate, function(match, param_name){
+      if(params[param_name]){
+        delete cloned_params[param_name];
+        return params[param_name];
+      }
+      return "required parameter: " + param_name;
+    });
+    if(!_.isEmpty(cloned_params)){
+      route += "?" + $.param(cloned_params);
+    }
+    return route;
+  };
   <%
     helpers = NanoApi::Engine.routes.url_helpers
     routes = {
@@ -8,11 +25,14 @@ NANO("api.routes", function(NANO){
       autocomplete_path: helpers.places_path(format: :json),
       week_minimal_prices: helpers.week_minimal_prices_path(format: :json),
       month_minimal_prices: helpers.month_minimal_prices_path(format: :json),
-      nearest_cities_prices: helpers.nearest_cities_prices_path(format: :json)
+      nearest_cities_prices: helpers.nearest_cities_prices_path(format: :json),
+      airline_homepage: helpers.link_search_click_path(':search_id', ':id'),
+      airline_deeplink: helpers.deeplink_search_click_path(':search_id', ':id') 
     }
   %>
   <% routes.each do |name, path| %>
     routes['<%= name %>'] = '<%= path %>';
   <% end %>
+
   return routes;
 });

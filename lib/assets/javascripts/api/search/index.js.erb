@@ -498,7 +498,7 @@ NANO("api.search", function (NANO) {
         detect(function(gate){
           return gate.is_airline;
         }).
-        min(function(date){
+        min(function(gate){
           return gate.default_currency_price.value;
         }).
         value();
@@ -514,14 +514,15 @@ NANO("api.search", function (NANO) {
       if(main_airline.deeplink_id){
         return {
           type: "deeplink",
-          url: "/airline_deeplinks/" + main_airline.deeplink_id + "?" + this._deeplink_request_params(),
+          url: NANO.api.routes("airline_deeplink", this._deeplink_request_params(main_airline.deeplink_id));
           price: null
         };
       }
       return false;
     },
-    _deeplink_request_params: function(){
+    _deeplink_request_params: function(deeplink_id){
       var params = {
+        id: deeplink_id,
         search_id: this.search.search_id,
         origin: this.direct_flights.origin(),
         destination: this.direct_flights.destination(),
@@ -534,7 +535,7 @@ NANO("api.search", function (NANO) {
       _.each(["depart_date", "return_date"], function(name){
         params[name] = GC.dates_formatter.server_request(params[name]);
       });
-      return GC.params.encode(params);
+      return params;
     },
     gates: function(){
       var ticket_gates = [];
