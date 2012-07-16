@@ -1,12 +1,13 @@
 NANO("api.routes", function(NANO){
   var interpolate = /:(\w+)/g;
+  var routes_list = {};
   var routes = function(route_name, params){
     if(_.isString(params)){
-      return routes[route_name] + "?" + params;
+      return routes_list[route_name] + "?" + params;
     }
     var cloned_params = _.clone(params);
-    var route = routes[route_name].replace(interpolate, function(match, param_name){
-      if(params[param_name]){
+    var route = routes_list[route_name].replace(interpolate, function(match, param_name){
+      if(params[param_name] !== undefined){
         delete cloned_params[param_name];
         return params[param_name];
       }
@@ -16,6 +17,9 @@ NANO("api.routes", function(NANO){
       route += "?" + $.param(cloned_params);
     }
     return route;
+  };
+  routes.append = function(route, name){
+    routes_list[name] = route;
   };
   <%
     helpers = NanoApi::Engine.routes.url_helpers
@@ -31,7 +35,7 @@ NANO("api.routes", function(NANO){
     }
   %>
   <% routes.each do |name, path| %>
-    routes['<%= name %>'] = '<%= path %>';
+    routes_list['<%= name %>'] = '<%= path %>';
   <% end %>
 
   return routes;
