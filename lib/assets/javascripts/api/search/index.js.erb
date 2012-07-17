@@ -33,7 +33,7 @@ NANO("api.search", function (NANO) {
       var self = this;
       var request_params = {};
       var ajax_params = {
-        url: NANO.api.routes.search_path,
+        url: NANO.api.routes("search_path"),
         type: search_data.method,
         dataType: 'json',
         data: search_data.data,

@@ -2,6 +2,9 @@ NANO("api.routes", function(NANO){
   var interpolate = /:(\w+)/g;
   var routes_list = {};
   var routes = function(route_name, params){
+    if(!params){
+      return routes_list[route_name];
+    }
     if(_.isString(params)){
       return routes_list[route_name] + "?" + params;
     }
@@ -9,7 +12,7 @@ NANO("api.routes", function(NANO){
     var route = routes_list[route_name].replace(interpolate, function(match, param_name){
       if(params[param_name] !== undefined){
         delete cloned_params[param_name];
-        return params[param_name];
+        return encodeURIComponent(params[param_name]);
       }
       return "required parameter: " + param_name;
     });
