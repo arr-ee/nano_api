@@ -83,6 +83,13 @@ module NanoApi
         Hash[attribute_names.map { |name| [name, send(name)] }]
       end
 
+      def present_attributes
+        Hash[attribute_names.map do |name|
+          value = send(name)
+          [name, value] if value.present?
+        end]
+      end
+
       def attribute_names
         @attributes.keys
       end
