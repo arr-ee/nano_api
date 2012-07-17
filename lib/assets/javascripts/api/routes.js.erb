@@ -27,7 +27,8 @@ NANO("api.routes", function(NANO){
   <%
     helpers = NanoApi::Engine.routes.url_helpers
     routes = {
-      search_path: helpers.searches_path(format: :json),
+      searches_path: helpers.searches_path(format: :json),
+      search: helpers.search_path(':search_id'),
       click_path: helpers.new_click_path(format: :json),
       autocomplete_path: helpers.places_path(format: :json),
       week_minimal_prices: helpers.week_minimal_prices_path(format: :json),

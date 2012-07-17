@@ -33,7 +33,7 @@ NANO("api.search", function (NANO) {
       var self = this;
       var request_params = {};
       var ajax_params = {
-        url: NANO.api.routes("search_path"),
+        url: NANO.api.routes("searches_path"),
         type: search_data.method,
         dataType: 'json',
         data: search_data.data,
@@ -137,7 +137,7 @@ NANO("api.search", function (NANO) {
     get: function(success, error){
       var ajax_data = _.extend({
         dataType: 'json',
-        url: NANO.api.routes.nearest_cities_prices
+        url: NANO.api.routes("nearest_cities_prices")
       }, {
         data: {
           search_id: this.search_id
@@ -495,7 +495,7 @@ NANO("api.search", function (NANO) {
     },
     airline_deeplink: function(){
       var airline_gate = _.chain(this.gates()).
-        detect(function(gate){
+        filter(function(gate){
           return gate.is_airline;
         }).
         min(function(gate){
