@@ -617,6 +617,7 @@ NANO("api.search", function (NANO) {
     fn: Tickets.prototype,
     init_stack: [],
     _self: function(tickets, params){
+      params.search_id = this.search_id;
       return new this._constructor(tickets, params);
     },
     minimal_price: function(){
