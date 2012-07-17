@@ -514,7 +514,7 @@ NANO("api.search", function (NANO) {
       if(main_airline.deeplink_id){
         return {
           type: "deeplink",
-          url: NANO.api.routes("airline_deeplink", this._deeplink_request_params(main_airline.deeplink_id));
+          url: NANO.api.routes("airline_deeplink", this._deeplink_request_params(main_airline.deeplink_id)),
           price: null
         };
       }
