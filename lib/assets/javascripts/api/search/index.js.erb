@@ -194,7 +194,7 @@ NANO("api.search", function (NANO) {
         }
         NANO.utils.ajax(_.extend({
           dataType: 'json',
-          url: NANO.api.routes[type + "_minimal_prices"]
+          url: NANO.api.routes(type + "_minimal_prices")
         }, params));
       }
     },
@@ -456,8 +456,10 @@ NANO("api.search", function (NANO) {
     init_stack: [],
     memoize: [],
     _default_url: function(id){
-      var path = '<%= NanoApi::Engine.routes.url_helpers.search_click_path(':search_id', ':id') %>';
-      return path.replace(':search_id', this.search.search_id).replace(':id', id);
+      return NANO.api.routes("search_click_path", {
+        id: id,
+        search_id: this.search.search_id
+      });
     },
     flight_numbers: function(){
       var self = this;
