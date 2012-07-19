@@ -535,7 +535,7 @@ NANO("api.search", function (NANO) {
         params.return_date = this.return_flights.depart_timestamp();
       }
       _.each(["depart_date", "return_date"], function(name){
-        params[name] = GC.dates_formatter.server_request(params[name]);
+        params[name] = GC.utils.dates.formatter.server_request(params[name]);
       });
       return params;
     },
