@@ -227,6 +227,7 @@ NANO("api.search", function (NANO) {
       week: function(data, ready){
         var async_worker = null;
         _.each(data.values, function(week_values, index){
+          var iteration = index + "";
           var asyc_data = {
             data: week_values,
             iterator: function(day_value){
@@ -247,8 +248,8 @@ NANO("api.search", function (NANO) {
           };
           if(!async_worker){
             async_worker = NANO.utils.worker(asyc_data);
-          }else{
-            async_worker.then(asyc_data);
+          } else {
+            async_worker = async_worker.then(asyc_data);
           }
         }); 
 
