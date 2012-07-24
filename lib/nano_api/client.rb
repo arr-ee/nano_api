@@ -18,6 +18,14 @@ module NanoApi
         !!(marker.to_s =~ AFFILIATE_MARKER_PATTERN)
       end
 
+      def current_request= request
+        Thread.current[:current_request] = request
+      end
+
+      def current_request
+        Thread.current[:current_request]
+      end
+
       protected
 
       def get *args
@@ -38,17 +46,18 @@ module NanoApi
 
       def request method, path, params = {}, options = {}
         options.reverse_merge!(parse: true)
-        params = params.reverse_merge(locale: I18n.locale)
+        params.reverse_merge!(locale: I18n.locale)
         path += '.json'
 
-        if method == :get
-          path = [path, params.to_query].delete_if(&:blank?).join('?')
-          params = {}
-        end
+        headers = {}
+        headers = {:accept_language => current_request.env['HTTP_ACCEPT_LANGUAGE']} if current_request
 
-        Rails.logger.info params
-        response = site[path].send(method, params)
-        Rails.logger.info response
+        response = if method == :get
+          path = [path, params.to_query].delete_if(&:blank?).join('?')
+          site[path].send(method, headers)
+        else
+          site[path].send(method, params, headers)
+        end
         options[:parse] ? JSON.parse(response) : response
       end
 

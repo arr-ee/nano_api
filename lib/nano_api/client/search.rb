@@ -11,7 +11,6 @@ module NanoApi
       def search host, params, options = {}
         params.symbolize_keys!
         marker = api_client_marker(params[:marker])
-        ip = params[:ip]
         search_params = params.slice(*SEARCH_PARAMS_KEYS).inject({}) do |result, (key, value)|
           result[key] = value if value.present?
           result
@@ -22,7 +21,7 @@ module NanoApi
           enable_api_auth: true,
           search: {
             host: host,
-            user_ip: ip,
+            user_ip: current_request.try(:remote_ip),
             marker: marker,
             params_attributes: search_params
           }

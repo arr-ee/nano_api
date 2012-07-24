@@ -21,7 +21,7 @@ class NanoApi::Backends::SearchesController < NanoApi::ApplicationController
       'origin_name', 'origin_iata', 'destination_name', 'destination_iata'
     ).to_json
 
-    search_result = @search.search(request.host, :ip => request.remote_ip)
+    search_result = @search.search(request.host)
 
     if search_result.present?
       forward_json(*search_result)

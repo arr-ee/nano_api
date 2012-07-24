@@ -41,7 +41,7 @@ module NanoApi
     end
 
     def search host, options = {}
-      Client.search(host, attributes_for_search.merge(marker: marker, ip: options.delete(:ip)), options)
+      Client.search(host, attributes_for_search.merge(marker: marker), options)
     end
 
     [:search, :cookies].each do |postfix|
