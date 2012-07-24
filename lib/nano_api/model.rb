@@ -21,6 +21,9 @@ module NanoApi
 
       include Attributable
       include Collectionizable
+      include Associations
+      include NestedAttributes
+      include Parameterizable
       extend ActiveModel::Callbacks
       extend ActiveModel::Naming
       extend ActiveModel::Translation

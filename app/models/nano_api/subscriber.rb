@@ -4,16 +4,16 @@ module NanoApi
 
     attribute :email
     attribute :frozen_until, type: Date
-    attribute :fare_alerts_attributes, type: FareAlert::Collection, default: FareAlert::Collection.new
+
+    embeds_many :fare_alerts, :class_name => 'NanoApi::FareAlert'
+
+    accepts_nested_attributes_for :fare_alerts
 
     validates :email, :presence => true
 
-    def fare_alerts
-      fare_alerts_attributes
-    end
-
     def save
-      NanoApi::Client.send :post_raw, 'subscribers', :subscriber => present_attributes
+      NanoApi::Client.send :post_raw, 'subscribers',
+        'subscriber' => to_params
     rescue RestClient::BadRequest
       false
     ensure

@@ -46,7 +46,9 @@ module NanoApi
           params = {}
         end
 
+        Rails.logger.info params
         response = site[path].send(method, params)
+        Rails.logger.info response
         options[:parse] ? JSON.parse(response) : response
       end
 
