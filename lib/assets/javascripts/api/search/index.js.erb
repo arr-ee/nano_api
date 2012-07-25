@@ -566,7 +566,7 @@ NANO("api.search", function (NANO) {
         if(urls && urls[id]){
           gate_data.url = urls[id] + "|" + search.params.search.marker;
           gate_data.type = "direct";
-        }else{
+        } else {
           gate_data.url = self._default_url(url_id);
           gate_data.type = "redirect";
         }
