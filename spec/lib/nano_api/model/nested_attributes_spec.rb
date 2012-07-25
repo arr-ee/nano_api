@@ -40,7 +40,7 @@ describe NanoApi::Model::Associations do
     before { instance.assocs_attributes = {1 => {:name => 'baz'}, 2 => {:name => 'foo'}} }
     specify { instance.to_params.should == {
       "name" => "world",
-      "assocs_attributes" => [{"name" => "baz"}, {"name" => "foo"}]
+      "assocs_attributes" => {'0' => {"name" => "baz"}, '1' => {"name" => "foo"}}
     } }
   end
 end

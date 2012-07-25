@@ -69,6 +69,10 @@ module NanoApi
       end
       alias_method :[], :read_attribute
 
+      def has_attribute? name
+        @attributes.key? name
+      end
+
       def read_attribute_before_type_cast name
         deserialize(send(name))
       end

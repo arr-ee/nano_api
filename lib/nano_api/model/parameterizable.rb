@@ -10,7 +10,12 @@ module NanoApi
           if self.class.nested_attributes? association_name
             records = send(association_name)
             hash["#{association_name}_attributes"] = if records.is_a?(Enumerable)
-              records.map { |a| a.serializable_hash }
+              attributes = {}
+              records.each_with_index do |a, i|
+                key = a.has_attribute?(:id) && a.id? ? a.id : i
+                attributes[key.to_s] = a.serializable_hash
+              end
+              attributes
             else
               records.serializable_hash
             end
