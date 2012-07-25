@@ -2,6 +2,9 @@ NANO("api.routes", function(NANO){
   var interpolate = /:(\w+)/g;
   var routes_list = {};
   var routes = function(route_name, params){
+    if(!routes_list[route_name]){
+      return false;
+    }
     if(!params){
       return routes_list[route_name];
     }
