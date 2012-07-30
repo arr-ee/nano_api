@@ -2,7 +2,7 @@ class NanoApi::Backends::SearchesController < NanoApi::ApplicationController
   include NanoApi::Extensions::Markerable
   include NanoApi::Extensions::UserLocation
 
-  before_filter :handle_marker, :only => :new
+  before_filter :handle_marker, :only => [:new, :show, :create]
 
   def new
     @search = NanoApi::Search.new(user_location_attributes)
