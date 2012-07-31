@@ -14,6 +14,7 @@ module NanoApi
         if _new_marker? && (_from_affiliate? || _current_non_affiliate?)
           cookies[:marker] = {
             :value => params[:marker],
+            :domain => request.domain,
             :expires => 30.days.from_now
           }
         end
