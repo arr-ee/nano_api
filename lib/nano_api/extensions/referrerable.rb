@@ -4,15 +4,15 @@ module NanoApi
       extend ActiveSupport::Concern
 
       included do
-        before_filter :handle_referrer
+        before_filter :handle_referer
       end
 
     private
 
-      def handle_referrer
-        referrer_domain = extract_domain(request.referrer)
-        if referrer_domain && referrer_domain != request.domain
-          session[:referrer] = request.referrer
+      def handle_referer
+        referer_domain = extract_domain(request.referer)
+        if referer_domain && referer_domain != request.domain
+          session[:referer] = request.referer
           session[:landing_page] = request.url
         end
       end

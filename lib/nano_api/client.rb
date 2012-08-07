@@ -52,7 +52,7 @@ module NanoApi
         headers = {}
         if current_request
           headers[:accept_language] = current_request.env['HTTP_ACCEPT_LANGUAGE']
-          headers[:referrer] = current_request.session[:referrer] if current_request.session[:referrer]
+          headers[:referer] = current_request.session[:referer] if current_request.session[:referer]
           headers[:landing_page] = current_request.session[:landing_page] if current_request.session[:landing_page]
         end
 

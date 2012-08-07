@@ -15,21 +15,21 @@ describe NanoApi::Extensions::Markerable do
     end
 
     it 'should save marker in search_params' do
-      get :new, :marker => 'referrer'
+      get :new, :marker => 'referer'
 
-      controller.send(:marker).should == 'referrer'
+      controller.send(:marker).should == 'referer'
     end
 
     it 'should handle ref parameter as marker too' do
-      get :new, :ref => 'referrer'
+      get :new, :ref => 'referer'
 
-      controller.send(:marker).should == 'referrer'
+      controller.send(:marker).should == 'referer'
     end
 
     it 'should save new marker in cookies' do
-      get :new, :marker => 'referrer'
+      get :new, :marker => 'referer'
 
-      controller.send(:cookies)[:marker].should == 'referrer'
+      controller.send(:cookies)[:marker].should == 'referer'
     end
 
     it 'should update cookies if new marker is affiliate marker' do
