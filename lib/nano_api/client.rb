@@ -50,7 +50,11 @@ module NanoApi
         path += '.json'
 
         headers = {}
-        headers = {:accept_language => current_request.env['HTTP_ACCEPT_LANGUAGE']} if current_request
+        if current_request
+          headers[:accept_language] = current_request.env['HTTP_ACCEPT_LANGUAGE']
+          headers[:referrer] = current_request.session[:referrer] if current_request.session[:referrer]
+          headers[:landing_page] = current_request.session[:landing_page] if current_request.session[:landing_page]
+        end
 
         response = if method == :get
           path = [path, params.to_query].delete_if(&:blank?).join('?')
