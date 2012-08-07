@@ -13,6 +13,7 @@ module NanoApi
       include Client::Places
       include Client::MinimalPrices
       include Client::Airlines
+      include Client::UiEvents
 
       def affiliate_marker? marker
         !!(marker.to_s =~ AFFILIATE_MARKER_PATTERN)

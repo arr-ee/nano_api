@@ -9,6 +9,11 @@ NanoApi::Engine.routes.draw do
   resources :clicks, only: :new
   resources :places, only: :index
   resources :airlines, only: :index
+  resources :ui_events, only: [] do
+    collection do
+      post :mass_create
+    end
+  end
   resources :feedbacks, only: :create
   resources :subscribers, only: :create
   get 'week_minimal_prices' => 'minimal_prices#week', as: :week_minimal_prices
