@@ -368,6 +368,9 @@ NANO("api.search", function (NANO) {
     airline: function(){
       return this.airline_duration().iata;
     },
+    depart_time: function(){
+      return this.flights[0].depart_time();
+    },
     depart_timestamp: function(){
       return this.flights[0].depart_timestamp();
     },
@@ -389,6 +392,8 @@ NANO("api.search", function (NANO) {
       return _.compact(_.uniq(this.get_flights_values("delay")));
     }
   };
+
+  var milliseconds_in_day = 24 * 60 * 60 * 1000;
 
   var Flight = function(flight_json, direction){
     this.direction = direction;
@@ -412,6 +417,9 @@ NANO("api.search", function (NANO) {
     },
     destination: function(){
       return this.data.destination;
+    },
+    depart_time: function(){
+      return this.depart_timestamp() % milliseconds_in_day;
     },
     depart_timestamp: function(){
       return this.data.departure * 1000;
