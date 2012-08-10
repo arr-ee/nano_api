@@ -29,7 +29,8 @@ module NanoApi
       rescue RestClient::ResourceNotFound,
         RestClient::BadRequest,
         RestClient::Forbidden,
-        RestClient::ServiceUnavailable => exception
+        RestClient::ServiceUnavailable,
+        RestClient::MethodNotAllowed => exception
           [exception.http_body, exception.http_code]
       rescue RestClient::InternalServerError
         nil
