@@ -270,15 +270,18 @@ NANO("api.search", function (NANO) {
       }, "month");
     },
     week: function(params, success, error){
-       this._request({
+      var request_params = {
         data: {
           search_id: this.search_id,
-          direct_date: +new Date(params.depart_date) / 1000,
-          return_date: +new Date(params.return_date) / 1000
+          direct_date: +new Date(params.depart_date) / 1000
         },
         success: success,
         error: error
-      }, "week");
+      };
+      if(params.retur_date){
+        request_params.data.return_date = +new Date(params.return_date) / 1000;
+      }
+      this._request(request_params, "week");
     }
   };
 
