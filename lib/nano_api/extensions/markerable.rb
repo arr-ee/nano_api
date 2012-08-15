@@ -10,26 +10,28 @@ module NanoApi
     private
 
       def handle_marker
-        params[:search][:marker] ||= params[:ref]
-        if _new_marker? && (_from_affiliate? || _current_non_affiliate?)
+        marker = params[:search][:marker] || params[:marker] || params[:ref]
+        puts cookies[:marker]
+        if _new_marker?(marker) && (_from_affiliate?(marker) || _current_non_affiliate?)
           cookies[:marker] = {
-            :value => params[:search][:marker],
+            :value => marker,
             :domain => request.domain,
             :expires => 30.days.from_now
           }
         end
+        puts cookies[:marker]
       end
 
       def marker
         @marker ||= cookies[:marker]
       end
 
-      def _new_marker?
-        params[:search][:marker].present? && params[:search][:marker] != cookies[:marker]
+      def _new_marker?(marker)
+        marker.present? && marker != cookies[:marker]
       end
 
-      def _from_affiliate?
-        NanoApi::Client.affiliate_marker?(params[:search][:marker])
+      def _from_affiliate?(marker)
+        NanoApi::Client.affiliate_marker?(marker)
       end
 
       def _current_non_affiliate?
