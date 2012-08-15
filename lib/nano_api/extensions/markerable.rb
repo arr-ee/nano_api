@@ -10,7 +10,8 @@ module NanoApi
     private
 
       def handle_marker
-        marker = params[:search][:marker] || params[:marker] || params[:ref]
+        marker = params[:search].try(:[], :marker) || params[:marker] || params[:ref]
+
         if _new_marker?(marker) && (_from_affiliate?(marker) || _current_non_affiliate?)
           cookies[:marker] = {
             :value => marker,
