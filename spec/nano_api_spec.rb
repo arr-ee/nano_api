@@ -11,7 +11,7 @@ describe NanoApi do
     end
 
     it 'should read marker from config' do
-      NanoApi.marker.should == 12345
+      NanoApi.marker.should == 12346
     end
   end
 end

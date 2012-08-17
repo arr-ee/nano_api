@@ -5,7 +5,7 @@ class NanoApi::Backends::ClicksController < NanoApi::ApplicationController
   end
 
   def show
-    if @click_form = NanoApi::Client.click(params[:search_id], params[:id] || params[:url_id])
+    if @click_form = NanoApi.client.click(params[:search_id], params[:id] || params[:url_id])
       render 'show', stream: true
     else
       redirect_to new_search_url
@@ -13,12 +13,12 @@ class NanoApi::Backends::ClicksController < NanoApi::ApplicationController
   end
 
   def link
-    @link_params = NanoApi::Client.link(params[:search_id], params[:id])
+    @link_params = NanoApi.client.link(params[:search_id], params[:id])
     redirect_to @link_params.try(:[], :url).presence || new_search_url
   end
 
   def deeplink
-    if @deeplink_params = NanoApi::Client.deeplink(params[:search_id], params[:id], params.except(:id, :search_id))
+    if @deeplink_params = NanoApi.client.deeplink(params[:search_id], params[:id], params.except(:id, :search_id))
       render 'deeplink', stream: true
     else
       redirect_to new_search_url

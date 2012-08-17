@@ -1,4 +1,4 @@
 test:
   api_token: test_key
   search_server: 'http://test.te'
-  marker: 12345
+  marker: 12346

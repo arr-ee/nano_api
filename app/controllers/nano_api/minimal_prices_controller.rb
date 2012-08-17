@@ -1,15 +1,15 @@
 module NanoApi
   class MinimalPricesController < NanoApi::ApplicationController
     def week
-      forward_json Client.week_minimal_prices(params[:search_id], params[:direct_date], params[:return_date])
+      forward_json NanoApi.client.week_minimal_prices(params[:search_id], params[:direct_date], params[:return_date])
     end
 
     def month
-      forward_json Client.month_minimal_prices(params[:search_id], params[:month])
+      forward_json NanoApi.client.month_minimal_prices(params[:search_id], params[:month])
     end
 
     def nearest
-      forward_json Client.nearest_cities_prices(params[:search_id])
+      forward_json NanoApi.client.nearest_cities_prices(params[:search_id])
     end
   end
 end

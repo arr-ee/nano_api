@@ -1,5 +1,14 @@
 module NanoApi
   module Global
+
+    def client= value
+      Thread.current[:client] = value
+    end
+
+    def client
+      Thread.current[:client]
+    end
+
     def search_server
       config['search_server']
     end

@@ -1,18 +1,23 @@
 module NanoApi
-  module Extensions
+  module Controller
     module Markerable
       extend ActiveSupport::Concern
 
       included do
         helper_method :marker
+        prepend_before_filter :handle_marker
+      end
+
+      def marker
+        @marker ||= cookies[:marker]
       end
 
     private
 
       def handle_marker
-        marker = params[:search].try(:[], :marker) || params[:marker] || params[:ref]
+        marker = params[:marker].presence || params[:ref].presence
 
-        if _new_marker?(marker) && (_from_affiliate?(marker) || _current_non_affiliate?)
+        if marker && _new_marker?(marker) && (_affiliate_marker?(marker) || !_affiliate_marker?(cookies[:marker]))
           cookies[:marker] = {
             :value => marker,
             :domain => request.domain,
@@ -21,20 +26,12 @@ module NanoApi
         end
       end
 
-      def marker
-        @marker ||= cookies[:marker]
-      end
-
       def _new_marker?(marker)
         marker.present? && marker != cookies[:marker]
       end
 
-      def _from_affiliate?(marker)
+      def _affiliate_marker?(marker)
         NanoApi::Client.affiliate_marker?(marker)
-      end
-
-      def _current_non_affiliate?
-        !NanoApi::Client.affiliate_marker?(cookies[:marker])
       end
     end
   end

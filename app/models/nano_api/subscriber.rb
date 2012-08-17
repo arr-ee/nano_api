@@ -12,7 +12,7 @@ module NanoApi
     validates :email, :presence => true
 
     def save
-      NanoApi::Client.send :post_raw, 'subscribers',
+      NanoApi.client.send :post_raw, 'subscribers',
         'subscriber' => to_params
     rescue RestClient::BadRequest
       false

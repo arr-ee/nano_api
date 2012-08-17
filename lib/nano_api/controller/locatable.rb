@@ -1,6 +1,6 @@
 module NanoApi
-  module Extensions
-    module UserLocation
+  module Controller
+    module Locatable
       extend ActiveSupport::Concern
 
       included do
@@ -10,15 +10,12 @@ module NanoApi
       private
 
       def user_location
-        session[:user_location] ||= NanoApi::Client.geoip(request.remote_ip) rescue nil
+        session[:user_location] ||= NanoApi.client.geoip(request.remote_ip) rescue nil
       end
 
       def user_location_attributes
         if user_location.is_a?(Hash)
-          {
-            :origin_name => user_location[:name],
-            :origin_iata => user_location[:iata]
-          }
+          { :origin_name => user_location[:name], :origin_iata => user_location[:iata] }
         else
           {}
         end

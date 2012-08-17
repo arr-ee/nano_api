@@ -3,7 +3,9 @@ require 'spec_helper'
 describe NanoApi::SearchesController do
   describe 'GET :new' do
     let!(:geoip_data){{iata: 'MOW', name: 'Moscow'}}
-    before{NanoApi::Client.stub(:geoip).and_return(geoip_data)}
+    before do
+      NanoApi::Client.any_instance.stub(:geoip).and_return(geoip_data)
+    end
 
     it 'should be successful' do
       get :new, use_route: :nano_api
@@ -72,7 +74,7 @@ describe NanoApi::SearchesController do
     }}
 
     before do
-      NanoApi::Client.stub(:search_params).with('1').and_return(params)
+      NanoApi::Client.any_instance.stub(:search_params).with('1').and_return(params)
     end
 
     it 'should be successful' do
@@ -84,7 +86,7 @@ describe NanoApi::SearchesController do
 
   describe 'POST :create' do
     before do
-      NanoApi::Client.stub(:search).and_return('{tickets: [{test: 1}, {test: 2}]}')
+      NanoApi::Client.any_instance.stub(:search).and_return('{tickets: [{test: 1}, {test: 2}]}')
       post :create, use_route: :nano_api
     end
 

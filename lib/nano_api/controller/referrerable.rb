@@ -1,5 +1,5 @@
 module NanoApi
-  module Extensions
+  module Controller
     module Referrerable
       extend ActiveSupport::Concern
 

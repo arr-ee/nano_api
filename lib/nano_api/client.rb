@@ -4,71 +4,70 @@ require 'json'
 require 'digest/md5'
 
 module NanoApi
-  module Client
+  class Client
     AFFILIATE_MARKER_PATTERN = /\A\d{5}/
 
-    class << self
-      include Client::Search
-      include Client::Click
-      include Client::Places
-      include Client::MinimalPrices
-      include Client::Airlines
-      include Client::UiEvents
+    include NanoApi::Client::Search
+    include NanoApi::Client::Click
+    include NanoApi::Client::Places
+    include NanoApi::Client::MinimalPrices
+    include NanoApi::Client::Airlines
+    include NanoApi::Client::UiEvents
 
-      def affiliate_marker? marker
-        !!(marker.to_s =~ AFFILIATE_MARKER_PATTERN)
-      end
+    attr_reader :controller
+    delegate :request, :session, to: :controller, allow_nil: true
+    delegate :site, to: 'self.class'
 
-      def current_request= request
-        Thread.current[:current_request] = request
-      end
-
-      def current_request
-        Thread.current[:current_request]
-      end
-
-      protected
-
-      def get *args
-        request :get, *args
-      end
-
-      def post *args
-        request :post, *args
-      end
-
-      def get_raw path, params = {}, options = {}
-        get path, params, options.merge(parse: false)
-      end
-
-      def post_raw path, params = {}, options = {}
-        post path, params, options.merge(parse: false)
-      end
-
-      def request method, path, params = {}, options = {}
-        options.reverse_merge!(parse: true)
-        params.reverse_merge!(locale: I18n.locale)
-        path += '.json'
-
-        headers = {}
-        if current_request
-          headers[:accept_language] = current_request.env['HTTP_ACCEPT_LANGUAGE']
-          headers[:referer] = current_request.session[:referer] if current_request.session[:referer]
-          headers[:landing_page] = current_request.session[:landing_page] if current_request.session[:landing_page]
-        end
-
-        response = if method == :get
-          path = [path, params.to_query].delete_if(&:blank?).join('?')
-          site[path].send(method, headers)
-        else
-          site[path].send(method, params, headers)
-        end
-        options[:parse] ? JSON.parse(response) : response
-      end
-
-      def site
-        @site ||= RestClient::Resource.new(NanoApi.search_server)
-      end
+    def initialize controller = nil
+      @controller = controller
     end
+
+    def self.site
+      @site ||= RestClient::Resource.new(NanoApi.search_server)
+    end
+
+    def self.affiliate_marker? marker
+      !!(marker.to_s =~ AFFILIATE_MARKER_PATTERN)
+    end
+
+  protected
+
+    def get *args
+      perform :get, *args
+    end
+
+    def post *args
+      perform :post, *args
+    end
+
+    def get_raw path, params = {}, options = {}
+      get path, params, options.merge(parse: false)
+    end
+
+    def post_raw path, params = {}, options = {}
+      post path, params, options.merge(parse: false)
+    end
+
+    def perform method, path, params = {}, options = {}
+      options.reverse_merge!(parse: true)
+      params.reverse_merge!(locale: I18n.locale)
+      path += '.json'
+
+      headers = {}
+      if request
+        headers[:accept_language] = request.env['HTTP_ACCEPT_LANGUAGE']
+        headers[:referer] = request.session[:referer] if request.session[:referer]
+        headers[:landing_page] = request.session[:landing_page] if request.session[:landing_page]
+      end
+
+      response = if method == :get
+        path = [path, params.to_query].delete_if(&:blank?).join('?')
+        site[path].send(method, headers)
+      else
+        site[path].send(method, params, headers)
+      end
+      options[:parse] ? JSON.parse(response) : response
+    end
+
   end
 end
