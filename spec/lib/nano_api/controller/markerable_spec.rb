@@ -1,13 +1,11 @@
 require 'spec_helper'
 
-describe NanoApi::Extensions::Markerable do
+describe NanoApi::Controller::Markerable do
   context do
     include RSpec::Rails::ControllerExampleGroup
 
     controller do
-      include NanoApi::Extensions::Markerable
-
-      before_filter :handle_marker
+      include NanoApi::Controller::Markerable
 
       def new
         render :nothing => true
@@ -15,7 +13,7 @@ describe NanoApi::Extensions::Markerable do
     end
 
     describe '.marker' do
-      [ {search: { :marker => 'referer' }}, {:marker => 'referer'}, {:ref => 'referer'} ].each do |param|
+      [ {:marker => 'referer'}, {:ref => 'referer'} ].each do |param|
         specify do
           get :new, param
           controller.send(:marker).should == 'referer'
@@ -24,10 +22,11 @@ describe NanoApi::Extensions::Markerable do
     end
 
     describe 'should save new marker in cookies' do
-      [ {search: { :marker => 'referer' }}, {:marker => 'referer'}, {:ref => 'referer'} ].each do |param|
+      [ {:marker => 'referer'}, {:ref => 'referer'} ].each do |param|
         specify do
           get :new, param
           controller.send(:cookies)[:marker].should == 'referer'
+          response.status.should == 301
         end
       end
     end

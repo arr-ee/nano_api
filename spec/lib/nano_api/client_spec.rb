@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe NanoApi::Client do
   describe '.affiliate_marker?' do
-    let(:affiliate_markers){['12345', '12345.lo']}
+    let(:affiliate_markers){['12346', '12346.lo']}
     let(:non_affiliate_markers){['yandex.org', '10.0.2.4', '', nil]}
 
     it 'should return true if marker of affiliate' do

@@ -16,8 +16,8 @@ module NanoApi
     attribute :adults, type: Integer, in: (1..9), default: 1
     attribute :children, type: Integer, in: (0..5), default: 0
     attribute :infants, type: Integer, in: (0..5), default: 0
+    attribute :feature
 
-    attr_accessor :marker
     alias_method :oneway=, :one_way=
 
     def passengers
@@ -40,8 +40,8 @@ module NanoApi
       return_date unless one_way
     end
 
-    def search host, options = {}
-      Client.search(host, attributes_for_search.merge(marker: marker), options)
+    def search options = {}
+      NanoApi.client.search(attributes_for_search, options)
     end
 
     [:search, :cookies].each do |postfix|
@@ -53,8 +53,8 @@ module NanoApi
     end
 
     def self.find id
-      attributes = Client.search_params(id)
-      raise NanoApi::Model::NotFound unless attributes
+      attributes = NanoApi.client.search_params(id)
+      raise NotFound unless attributes
       new(attributes)
     end
 

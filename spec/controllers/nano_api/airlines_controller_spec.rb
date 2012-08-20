@@ -3,7 +3,7 @@ require 'spec_helper'
 describe NanoApi::AirlinesController do
   describe 'GET :index' do
     before do
-      NanoApi::Client.stub(:airlines_for_direction).with('LED', 'MOW').and_return('[{"iata": "UR"}]')
+      NanoApi::Client.any_instance.stub(:airlines_for_direction).with('LED', 'MOW').and_return('[{"iata": "UR"}]')
     end
 
     it 'should be successful' do

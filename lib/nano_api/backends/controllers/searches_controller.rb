@@ -1,8 +1,4 @@
 class NanoApi::Backends::SearchesController < NanoApi::ApplicationController
-  include NanoApi::Extensions::Markerable
-  include NanoApi::Extensions::UserLocation
-
-  before_filter :handle_marker, :only => [:new, :show, :create]
 
   def new
     @search = NanoApi::Search.new(user_location_attributes)
@@ -21,7 +17,7 @@ class NanoApi::Backends::SearchesController < NanoApi::ApplicationController
       'origin_name', 'origin_iata', 'destination_name', 'destination_iata'
     ).to_json
 
-    search_result = @search.search(request.host)
+    search_result = @search.search
 
     if search_result.present?
       forward_json(*search_result)
@@ -39,4 +35,5 @@ private
   def cookie_params
     JSON.parse(cookies[:ls].presence) rescue {}
   end
+
 end

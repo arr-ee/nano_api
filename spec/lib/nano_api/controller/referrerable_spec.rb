@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe NanoApi::Extensions::Referrerable do
+describe NanoApi::Controller::Referrerable do
   context do
     include RSpec::Rails::ControllerExampleGroup
 
     controller do
-      include NanoApi::Extensions::Referrerable
+      include NanoApi::Controller::Referrerable
 
       def new
         render :nothing => true

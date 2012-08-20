@@ -1,31 +1,40 @@
 require 'spec_helper'
 
 describe NanoApi::Client do
-  let(:rest_client){subject.send(:site)}
-  let(:fake){ %r{^#{URI.join(NanoApi.search_server, path)}} }
+  let(:rest_client) { NanoApi::Client.send(:site) }
+  let(:fake) { %r{^#{URI.join(NanoApi.search_server, path)}} }
+  let(:controller) { mock(marker: 'test', request: mock(host: 'test.com', session: {}, env: {}, remote_ip: '127.1.1.1')) }
+  subject { NanoApi::Client.new controller }
+
 
   describe '.search' do
     let(:path){'searches.json'}
+
     context 'normal response' do
       before do
         FakeWeb.register_uri :post, fake, body: '{tickets: [{test: 1}, {test: 2]}'
       end
 
       it 'should require api for search action with given params' do
-        action = double
-        NanoApi.stub(:marker).and_return(nil)
         subject.stub(:api_client_signature).and_return('test_signature')
-        rest_client.stub(:[]).with('searches.json').and_return(action)
-        action.should_receive(:post).with hash_including(
+        rest_client.stub(:[]).with('searches.json').and_return(subject)
+        subject.should_receive(:post).with 'searches', hash_including(
           signature: 'test_signature',
-          search: {host: 'test.search.te', marker: 'test', user_ip: nil, params_attributes: {origin_iata: 'LED'}}
-        ), {}
+          search: {
+            host: 'test.com',
+            marker: '12346.test',
+            user_ip: '127.1.1.1',
+            params_attributes: {
+              origin_iata: 'LED'
+            }
+          }
+        ), { parse: false }
 
-        subject.search('test.search.te', marker: 'test', origin_iata: 'LED')
+        subject.search(marker: 'test', origin_iata: 'LED')
       end
 
       it 'should return api response without any modifications' do
-        subject.search('test', {}).should == '{tickets: [{test: 1}, {test: 2]}'
+        subject.search({}).should == '{tickets: [{test: 1}, {test: 2]}'
       end
     end
 
@@ -35,7 +44,7 @@ describe NanoApi::Client do
           body: '{error: "params is invalid"}',
           status: ['400', 'Bad Request']
 
-        subject.search('test', {}).should == ['{error: "params is invalid"}', 400]
+        subject.search({}).should == ['{error: "params is invalid"}', 400]
       end
 
       it 'should handle invalid input error' do
@@ -44,7 +53,7 @@ describe NanoApi::Client do
           status: ['403', 'Forbidden']
         )
 
-        subject.search('test', {}).should == ['{error: "your ip is banned"}', 403]
+        subject.search({}).should == ['{error: "your ip is banned"}', 403]
       end
 
       it 'should handle invalid input error' do
@@ -52,7 +61,7 @@ describe NanoApi::Client do
           status: ['500', 'Internal Server Error']
         )
 
-        subject.search('test', {}).should == nil
+        subject.search({}).should == nil
       end
     end
   end
