@@ -26,6 +26,7 @@ describe NanoApi::Controller::Markerable do
         specify do
           get :new, param
           controller.send(:cookies)[:marker].should == 'referer'
+          response.status.should == 301
         end
       end
     end

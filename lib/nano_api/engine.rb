@@ -1,4 +1,5 @@
 require 'nano_api'
+require 'nano_api/controller'
 require 'rails'
 
 module NanoApi
