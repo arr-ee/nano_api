@@ -87,7 +87,9 @@ NANO("api.search", function (NANO) {
           _.each(self._ready_callbacks, function(callback){
             callback(search_results);
           });
-          complete(search_results);
+          if(_.isFunction(complete)){
+            complete(search_results);
+          }
           window.CURRENT_SEARCH = search_results;
         }
       });

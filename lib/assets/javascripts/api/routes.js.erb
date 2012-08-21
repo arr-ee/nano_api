@@ -1,5 +1,5 @@
 NANO("api.routes", function(NANO){
-  var interpolate = /:(\w+)/g;
+  var interpolate = /:([a-zA-Z_\-]+)/g;
   var routes_list = {};
   var routes = function(route_name, params){
     var route = route_name === "current" ? window.location.href : routes_list[route_name];
