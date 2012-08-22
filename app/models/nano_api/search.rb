@@ -5,9 +5,9 @@ module NanoApi
     include NanoApi::Model
 
     attribute :origin_iata
-    attribute :origin_name
+    attribute(:origin_name){|s| s.origin_iata}
     attribute :destination_iata
-    attribute :destination_name
+    attribute(:destination_name){|s| s.destination_iata}
     attribute(:depart_date, type: Date){Date.current + 2.weeks}
     attribute(:return_date, type: Date){Date.current + 3.weeks}
     attribute :range, type: Boolean, default: false

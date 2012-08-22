@@ -51,9 +51,9 @@ module NanoApi
           end
         end
 
-        def attribute_default name
+        def attribute_default name, instance = nil
           default = _attributes[name][:default]
-          default.respond_to?(:call) ? default.call : default
+          default.respond_to?(:call) ? default.call(instance) : default
         end
 
         def initialize_attributes
@@ -65,7 +65,7 @@ module NanoApi
       end
 
       def read_attribute name
-        @attributes[name].nil? ? attribute_default(name) : @attributes[name]
+        @attributes[name].nil? ? attribute_default(name, self) : @attributes[name]
       end
       alias_method :[], :read_attribute
 
