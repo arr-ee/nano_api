@@ -48,7 +48,9 @@ NANO("api.search", function (NANO) {
 
     create: function (json, complete) {
       json.minimal_prices = {};
+      json.expires = +new Date() + 5000;// json.search_cache_time * 60 * 1000;
       var search_results = _.extend({}, json);
+      search_results.raw = json;
       var self = this;
       var worker = null;
 
@@ -57,6 +59,9 @@ NANO("api.search", function (NANO) {
         var params = {
           data: search_results[field_name] || [],
           after: function(results){
+            if(!results || results.length === 0){
+              return false;
+            }
             if(Collection){
               return new Collection(results, {
                 search_id: search_results.search_id
@@ -65,7 +70,9 @@ NANO("api.search", function (NANO) {
             return results;
           },
           complete: function(results){
-            search_results[field_name] = results;
+            if(results){
+              search_results[field_name] = results;
+            }
           }
         };
         if(self._each[field_name]){
@@ -131,27 +138,6 @@ NANO("api.search", function (NANO) {
     NANO.api.airports.update(airports);
     return NANO.api.airports;
   });
-
-  var NearestCities = function(data, info){
-    this.search_id = info.search_id;
-  };
-  NearestCities.prototype = {
-    get: function(success, error){
-      var ajax_data = _.extend({
-        dataType: 'json',
-        url: NANO.api.routes("nearest_cities_prices")
-      }, {
-        data: {
-          search_id: this.search_id
-        },
-        success: success,
-        error: error
-      });
-      NANO.utils.ajax(ajax_data);
-    }
-  };
-
-  search.collection("nearest_cities_prices", NearestCities);
 
   var MinimalPrices = function(data, search_params){
     this.search_id = search_params.search_id;
@@ -309,6 +295,7 @@ NANO("api.search", function (NANO) {
 
   var Flights = function(flights_array, direction){
     this.direction = direction;
+    this.data = flights_array;
     this.flights = _.map(flights_array, function(flight_json){
       return new Flight(flight_json, direction);
     });
@@ -403,6 +390,7 @@ NANO("api.search", function (NANO) {
   var Flight = function(flight_json, direction){
     this.direction = direction;
     this.data = flight_json;
+    this.data.alliance = this.data.alliance || NANO.api.airlines.get(this.airline()).alliance_name;
   };
   Flight.prototype = {
     duration: function(){
@@ -415,7 +403,7 @@ NANO("api.search", function (NANO) {
       return this.data.airline;
     },
     alliance: function(){
-      return NANO.api.airlines.get(this.airline()).alliance_name;
+      return this.data.alliance;
     },
     origin: function(){
       return this.data.origin;
@@ -447,9 +435,10 @@ NANO("api.search", function (NANO) {
 
   //добавляем сами билеты
   var Ticket = function(ticket_json, search){
-    this.search = search;
+    search = search || {};
+    this.search_id = ticket_json.search_id || search.search_id;
+    this.expires = ticket_json.expires || search.expires;
     this._data = ticket_json;
-    this.label = this._data.label;
     var self = this;
     _.each(["direct", "return"], function(direction){
       var name = direction + "_flights";
@@ -458,10 +447,16 @@ NANO("api.search", function (NANO) {
       }
     });
 
-    this.id = "ticket_" + this.flight_numbers().join("-");
+    this.id = ticket_json.id || "ticket_" + this.flight_numbers().join("-");
     
-    _.each(this.init_stack, function(method_name){
-      self[method_name]();
+    var ticket_arguments = arguments;
+    _.each(this.init_stack, function(method){
+      if(_.isFunction(method)){
+        method.apply(self, ticket_arguments);
+      } else {
+        self[method].apply(self, self);
+      }
+      
     });
     memoize(this);
   };
@@ -469,11 +464,25 @@ NANO("api.search", function (NANO) {
     fn: Ticket.prototype,
     init_stack: [],
     memoize: [],
-    _default_url: function(id){
-      return NANO.api.routes("search_click_path", {
-        id: id,
-        search_id: this.search.search_id
+    context: function(){
+      var data = {};
+      _.each(["airines", "airports"], function(name){
+        data[name] = self.direct_flights[name]();
+        if(self.return_flights){
+          data[name] = data[name].concat(self.return_flights[name]());
+        }
       });
+      return data;
+    },
+    serialize: function(extention){
+      return _.extend({
+        id: this.id,
+        search_id: this.search_id,
+        direct_flights: this.direct_flights.data,
+        return_flights: this.return_flights ? this.return_flights.data : undefined,
+        expires: this.expires,
+        gates: this.gates()
+      }, extention);
     },
     flight_numbers: function(){
       var self = this;
@@ -491,22 +500,10 @@ NANO("api.search", function (NANO) {
         return airline.duration;
       }).iata;
     },
-    send_gate_data: function(gate_id){
-      if(!urls[id]){
-        return;
-      }
-      var gate = _.detect(this.gates(), function(gate){
-        return gate.id === gate_id;
-      });
-      NANO.utils.ajax({
-        url: this._default_url(gate.url_id) + '.js',
-        type: "get",
-        data: {
-          click: {
-            gate_id: gate.id,
-            proposal_price: NANO.api.currency.to_default(gate.price)
-          }
-        }
+    url: function(){
+      return NANO.api.routes("current", {
+        ticket_id: this.id,
+        price: this.gates()[0].default_currency_price.value
       });
     },
     airline_deeplink: function(){
@@ -539,7 +536,7 @@ NANO("api.search", function (NANO) {
     _deeplink_request_params: function(deeplink_id){
       var params = {
         id: deeplink_id,
-        search_id: this.search.search_id,
+        search_id: this.search_id,
         origin: this.direct_flights.origin(),
         destination: this.direct_flights.destination(),
         depart_date: this.direct_flights.depart_timestamp(),
@@ -554,39 +551,36 @@ NANO("api.search", function (NANO) {
       return params;
     },
     gates: function(){
-      var ticket_gates = [];
       var self = this;
-      var prices = this._data.native_prices;
-      var gates = this.search.gates_info;
-      var search = this.search;
-      var urls = this.direct_order_urls;
+      if(!this._data.gates){
+        this._data.gates = [];
+        _.each(this._data.order_urls, function(url_id, id){
+          var gate = NANO.api.gates.get(id);
 
-      _.each(this._data.order_urls, function(url_id, id){
-        var gate = gates.get(id);
-        var gate_data = {
-          ticket_id: self.id,
-          id: id,
-          name: gate.label,
-          url_id: url_id,
-          is_airline: gate.is_airline,
-          payment_methods: gate.payment_methods,
-          price: {
-            currency: gate.currency_code,
-            value: prices[id]
-          },
-          default_currency_price: NANO.api.currency.to_default(prices[id], gate.currency_code)
-        };
-        if(urls && urls[id]){
-          gate_data.url = urls[id] + "|" + search.params.search.marker;
-          gate_data.type = "direct";
-        } else {
-          gate_data.url = self._default_url(url_id);
-          gate_data.type = "redirect";
-        }
-        ticket_gates.push(gate_data);
-      });
+          var default_currency_price = NANO.api.currency.to_default({
+            value: self._data.native_prices[id],
+            currency: gate.currency_code
+          });
 
-      ticket_gates = ticket_gates.sort(function(gate_a, gate_b){
+          self._data.gates.push({
+            ticket_id: self.id,
+            id: id,
+            name: gate.label,
+            is_airline: gate.is_airline,
+            payment_methods: gate.payment_methods,
+            price: NANO.api.currency.to_current(default_currency_price),
+            default_currency_price: default_currency_price,
+            url: NANO.api.routes("search_click_path", {
+              id: url_id,
+              search_id: self.search_id
+            }),
+            type: "redirect"
+          });
+        });
+      }
+      
+
+      this._data.gates = this._data.gates.sort(function(gate_a, gate_b){
         return gate_a.default_currency_price.value < gate_b.default_currency_price.value ? (-1) : (1);
       });
 
@@ -595,13 +589,13 @@ NANO("api.search", function (NANO) {
       this.gates = function(param){
         if(param){
           if(!param_cache[param]){
-            param_cache[param] =  _.map(ticket_gates, function(gate){
+            param_cache[param] =  _.map(self._data.gates, function(gate){
               return gate[param];
             });
           }
           return param_cache[param];
         }
-        return ticket_gates.concat([]);
+        return self._data.gates.concat([]);
       };
       return this.gates();
     },
