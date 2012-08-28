@@ -337,7 +337,13 @@ NANO("api.search", function (NANO) {
     alliances: function(){
       return _.uniq(this.get_flights_values("alliance", true));
     },
-
+    airports: function(){
+      var airports = [];
+      _.each(this.flights, function(flight){
+        airports = airports.concat(flight.airports());
+      });
+      return airports;
+    },
     airline_duration: function(){
       return _(this.list()).chain().
       reduce(function(hash, flight){
@@ -405,6 +411,9 @@ NANO("api.search", function (NANO) {
     alliance: function(){
       return this.data.alliance;
     },
+    airports: function(){
+      return [this.data.origin, this.data.destination];
+    },
     origin: function(){
       return this.data.origin;
     },
@@ -466,11 +475,17 @@ NANO("api.search", function (NANO) {
     memoize: [],
     context: function(){
       var data = {};
-      _.each(["airines", "airports"], function(name){
-        data[name] = self.direct_flights[name]();
+      var self = this;
+      _.each(["airlines", "airports"], function(name){
+        var list = self.direct_flights[name]();
         if(self.return_flights){
-          data[name] = data[name].concat(self.return_flights[name]());
+          list = list.concat(self.return_flights[name]());
         }
+        var collected_data = {};
+        _.each(list, function(id){
+          collected_data[id] = NANO.api[name].get(id);
+        });
+        data[name] = collected_data;
       });
       return data;
     },
@@ -501,7 +516,8 @@ NANO("api.search", function (NANO) {
       }).iata;
     },
     url: function(){
-      return NANO.api.routes("current", {
+      return NANO.api.routes("search", {
+        search_id: this.search_id,
         ticket_id: this.id,
         price: this.gates()[0].default_currency_price.value
       });
