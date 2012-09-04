@@ -25,17 +25,17 @@ describe NanoApi::SearchesController do
       }}
 
       context do
-        before{get :new}
+        before{get :new, use_route: :nano_api}
         specify{assigns[:search].attributes.should include({'origin_name' => 'Moscow', 'origin_iata' => 'MOW'})}
       end
 
       context 'unwrapped params' do
-        before{get :new, search[:search]}
+        before{get :new, search[:search].merge(use_route: :nano_api)}
         specify{assigns[:search].attributes.should include search[:search]}
       end
 
       context 'wrapped params' do
-        before{get :new, search}
+        before{get :new, search.merge(use_route: :nano_api)}
         specify{assigns[:search].attributes.should include search[:search]}
       end
 
@@ -44,15 +44,24 @@ describe NanoApi::SearchesController do
           origin_iata: 'MOW',
           destination_iata: 'LON'
         }.stringify_keys!}
-        before{cookies.stub(:[]).with(:ls){cookies_defaults.to_json}}
+        before do
+          cookies.stub(:[]).with(:search_params) do
+            {
+              params_attributes: {
+                origin: { iata: 'BKK' },
+                destination: { iata: 'LON' }
+              }
+            }.to_json
+          end
+        end
 
         context do
-          before{get :new}
+          before{get :new, use_route: :nano_api}
           specify{assigns[:search].attributes.should include cookies_defaults}
         end
 
         context do
-          before{get :new, search}
+          before{get :new, search.merge(use_route: :nano_api)}
           specify{assigns[:search].attributes.should include search[:search]}
         end
       end
@@ -96,9 +105,7 @@ describe NanoApi::SearchesController do
       response.body.should == '{tickets: [{test: 1}, {test: 2}]}'
     end
 
-    specify{cookies[:ls].should == assigns[:search].attributes_for_cookies.slice(
-      'origin_name', 'origin_iata', 'destination_name', 'destination_iata'
-    ).to_json}
+    specify{cookies[:search_params].should == assigns[:search].search_params.to_json}
 
     it 'should pass params to api call'
     it 'should return json received from api'

@@ -1,9 +1,7 @@
 class NanoApi::Backends::SearchesController < NanoApi::ApplicationController
 
   def new
-    @search = NanoApi::Search.new(user_location_attributes)
-    @search.update_attributes(cookie_params)
-    @search.update_attributes(search_params)
+    @search = search_instance search_params
   end
 
   def show
@@ -13,9 +11,10 @@ class NanoApi::Backends::SearchesController < NanoApi::ApplicationController
 
   def create
     @search = NanoApi::Search.new(search_params)
-    cookies[:ls] = @search.attributes_for_cookies.slice(
-      'origin_name', 'origin_iata', 'destination_name', 'destination_iata'
-    ).to_json
+    cookies[:search_params] = {
+      :value => @search.search_params.to_json,
+      :domain => (request.domain if request.domain.include?('.'))
+    }
 
     search_result = @search.search
 
@@ -30,10 +29,6 @@ private
 
   def search_params
     params[:search].is_a?(Hash) ? params[:search] : params
-  end
-
-  def cookie_params
-    JSON.parse(cookies[:ls].presence) rescue {}
   end
 
 end

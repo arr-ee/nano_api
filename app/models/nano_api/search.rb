@@ -25,8 +25,8 @@ module NanoApi
     end
 
     [:origin, :destination].each do |name|
-      define_method "default_#{name}_name" do
-        send "#{name}_iata"
+      define_method name do
+        { :name => send("#{name}_name"), :iata => send("#{name}_iata") }
       end
 
       define_method "#{name}=" do |data|
@@ -37,6 +37,10 @@ module NanoApi
         else
           send "#{name}_name=", data
         end
+      end
+
+      define_method "default_#{name}_name" do
+        send "#{name}_iata"
       end
     end
 
@@ -54,6 +58,13 @@ module NanoApi
           [name, respond_to?("#{name}_for_#{postfix}") ? send("#{name}_for_#{postfix}") : send(name)]
         end]
       end
+    end
+
+    def search_params
+      {:search_params => attributes_for_cookies.slice(
+        'origin', 'destination', 'depart_date', 'return_date',
+        'range', 'adults', 'children', 'infants', 'trip_class'
+      )}
     end
 
     def self.find id
