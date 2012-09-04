@@ -5,9 +5,9 @@ module NanoApi
     include NanoApi::Model
 
     attribute :origin_iata
-    attribute(:origin_name){|s| s.origin_iata}
+    attribute :origin_name, &:default_origin_name
     attribute :destination_iata
-    attribute(:destination_name){|s| s.destination_iata}
+    attribute :destination_name, &:default_destination_name
     attribute(:depart_date, type: Date){Date.current + 2.weeks}
     attribute(:return_date, type: Date){Date.current + 3.weeks}
     attribute :range, type: Boolean, default: false
@@ -25,6 +25,10 @@ module NanoApi
     end
 
     [:origin, :destination].each do |name|
+      define_method "default_#{name}_name" do
+        send "#{name}_iata"
+      end
+
       define_method "#{name}=" do |data|
         if data.is_a?(Hash)
           data.symbolize_keys!

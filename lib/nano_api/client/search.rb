@@ -49,13 +49,13 @@ private
 
   def api_client_signature marker, params
     Digest::MD5.hexdigest(
-      [NanoApi.api_token, marker, *params.values_at(*params.keys.sort)].join(?:)
+      [NanoApi.config.api_token, marker, *params.values_at(*params.keys.sort)].join(?:)
     )
   end
 
   def api_client_marker additional_marker
     result = [additional_marker]
-    result.unshift(NanoApi.marker) if NanoApi.marker.present?
+    result.unshift(NanoApi.config.marker) if NanoApi.config.marker.present?
     result.compact.join(?.)
   end
 

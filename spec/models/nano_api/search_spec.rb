@@ -32,4 +32,20 @@ describe NanoApi::Search do
     end
   end
 
+  describe 'names defaults' do
+    let(:search) { Fabricate :nano_api_search_iatas }
+    subject { search }
+
+    context do
+      its(:origin_name){ should == search.origin_iata }
+      its(:destination_name){ should == search.destination_iata }
+    end
+
+    context do
+      before { search.update_attributes(origin_name: 'London', destination_name: 'Moscow') }
+      its(:origin_name){ should == 'London' }
+      its(:destination_name){ should == 'Moscow' }
+    end
+  end
+
 end

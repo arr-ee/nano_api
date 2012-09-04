@@ -4,7 +4,7 @@ describe NanoApi::Search do
 
   describe '.save' do
     let(:feedback){ Fabricate :nano_api_feedback }
-    let(:fake) { %r{^#{URI.join(NanoApi.search_server, 'user_feedback_reports')}} }
+    let(:fake) { %r{^#{URI.join(NanoApi.config.search_server, 'user_feedback_reports')}} }
 
     context 'success' do
       before do

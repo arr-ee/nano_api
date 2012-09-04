@@ -7,7 +7,7 @@ describe NanoApi::Client do
 
     context 'standard api call' do
       before do
-        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches/%d/order_urls/%d.json' % [search, url],
+        FakeWeb.register_uri(:post, NanoApi.config.search_server + '/searches/%d/order_urls/%d.json' % [search, url],
           body: '{"url": "http://test.com", "http_method": "post", "params": {"test_key": "test_value"}}'
         )
       end
@@ -24,7 +24,7 @@ describe NanoApi::Client do
     context 'handle api errors' do
       before do
         FakeWeb.register_uri(:post,
-          NanoApi.search_server + '/searches/%d/order_urls/%d.json' % [search, url],
+          NanoApi.config.search_server + '/searches/%d/order_urls/%d.json' % [search, url],
           status: ['404', 'Not Found']
         )
       end
@@ -41,7 +41,7 @@ describe NanoApi::Client do
 
     before do
       FakeWeb.register_uri(:get,
-        NanoApi.search_server + "/airline_logo/#{airline}.json?locale=en&search_id=#{search}",
+        NanoApi.config.search_server + "/airline_logo/#{airline}.json?locale=en&search_id=#{search}",
         body: '{"url": "http://test.com"}'
       )
     end
@@ -59,7 +59,7 @@ describe NanoApi::Client do
 
     before do
       FakeWeb.register_uri(:get,
-        NanoApi.search_server + "/airline_deeplinks/#{proposal}.json?adults=1&locale=en&search_id=#{search}",
+        NanoApi.config.search_server + "/airline_deeplinks/#{proposal}.json?adults=1&locale=en&search_id=#{search}",
         body: '{"url": "http://test.com", "http_method": "post"}'
       )
     end

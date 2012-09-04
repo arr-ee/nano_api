@@ -18,6 +18,6 @@ describe NanoApi::Model do
   specify{model.instantiate({}).should be_persisted}
 
   context 'Fault tolerance' do
-    specify{expect{model.new(:foo => 'bar')}.should_not raise_error}
+    specify{ expect{ model.new(:foo => 'bar') }.not_to raise_error}
   end
 end
