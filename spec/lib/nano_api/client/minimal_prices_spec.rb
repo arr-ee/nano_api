@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe NanoApi::Client do
   let(:rest_client){subject.send(:site)}
-  let(:fake){ %r{^#{URI.join(NanoApi.search_server, path)}} }
+  let(:fake){ %r{^#{URI.join(NanoApi.config.search_server, path)}} }
 
   describe '.minimal_prices' do
     let(:search){1212}

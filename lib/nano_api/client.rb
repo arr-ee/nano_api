@@ -23,7 +23,7 @@ module NanoApi
     end
 
     def self.site
-      @site ||= RestClient::Resource.new(NanoApi.search_server)
+      @site ||= RestClient::Resource.new(NanoApi.config.search_server)
     end
 
     def self.affiliate_marker? marker
@@ -55,6 +55,7 @@ module NanoApi
 
       headers = {}
       if request
+        params.reverse_merge!(user_ip: request.remote_ip) if request.remote_ip.present?
         headers[:accept_language] = request.env['HTTP_ACCEPT_LANGUAGE']
         headers[:referer] = request.session[:referer] if request.session[:referer]
         headers[:landing_page] = request.session[:landing_page] if request.session[:landing_page]
