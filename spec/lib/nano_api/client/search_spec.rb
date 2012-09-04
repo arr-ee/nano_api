@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe NanoApi::Client do
   let(:rest_client) { NanoApi::Client.send(:site) }
-  let(:fake) { %r{^#{URI.join(NanoApi.search_server, path)}} }
+  let(:fake) { %r{^#{URI.join(NanoApi.config.search_server, path)}} }
   let(:controller) { mock(marker: 'test', request: mock(host: 'test.com', session: {}, env: {}, remote_ip: '127.1.1.1')) }
   subject { NanoApi::Client.new controller }
 
@@ -48,7 +48,7 @@ describe NanoApi::Client do
       end
 
       it 'should handle invalid input error' do
-        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
+        FakeWeb.register_uri(:post, NanoApi.config.search_server + '/searches.json',
           body: '{error: "your ip is banned"}',
           status: ['403', 'Forbidden']
         )
@@ -57,7 +57,7 @@ describe NanoApi::Client do
       end
 
       it 'should handle invalid input error' do
-        FakeWeb.register_uri(:post, NanoApi.search_server + '/searches.json',
+        FakeWeb.register_uri(:post, NanoApi.config.search_server + '/searches.json',
           status: ['500', 'Internal Server Error']
         )
 
@@ -100,12 +100,12 @@ describe NanoApi::Client do
 
   describe '.api_client_marker' do
     it 'should add marker from config' do
-      NanoApi.stub(:marker).and_return('12345')
+      NanoApi.stub(:config).and_return(mock(:marker => '12345'))
       subject.send(:api_client_marker, 'test').should == '12345.test'
     end
 
     it 'should work with empty marker in config' do
-      NanoApi.stub(:marker).and_return(nil)
+      NanoApi.stub(:config).and_return(mock(:marker => nil))
       subject.send(:api_client_marker, 'test').should == 'test'
     end
   end

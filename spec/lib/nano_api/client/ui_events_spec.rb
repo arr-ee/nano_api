@@ -3,7 +3,7 @@ require 'spec_helper'
 describe NanoApi::Client do
   let(:rest_client){subject.send(:site)}
   let(:response){'{success: true}'}
-  let(:fake){ URI.join(NanoApi.search_server, path) }
+  let(:fake){ URI.join(NanoApi.config.search_server, path) }
   let(:path){'/ui_events/mass_create.json'}
 
   before do
