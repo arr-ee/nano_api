@@ -45,7 +45,7 @@ describe NanoApi::SearchesController do
           destination_iata: 'LON'
         }.stringify_keys!}
         before do
-          cookies.stub(:[]).with(:search_params) do
+          cookies.stub(:[]).with(:search_params1) do
             {
               params_attributes: {
                 origin: { iata: 'BKK' },
@@ -83,7 +83,7 @@ describe NanoApi::SearchesController do
     }}
 
     before do
-      NanoApi::Client.any_instance.stub(:search_params).with('1').and_return(params)
+      NanoApi::Client.any_instance.stub(:search_params1).with('1').and_return(params)
     end
 
     it 'should be successful' do
@@ -105,7 +105,7 @@ describe NanoApi::SearchesController do
       response.body.should == '{tickets: [{test: 1}, {test: 2}]}'
     end
 
-    specify{cookies[:search_params].should == assigns[:search].search_params.to_json}
+    specify{cookies[:search_params1].should == assigns[:search].search_params.to_json}
 
     it 'should pass params to api call'
     it 'should return json received from api'

@@ -11,7 +11,7 @@ class NanoApi::Backends::SearchesController < NanoApi::ApplicationController
 
   def create
     @search = NanoApi::Search.new(search_params)
-    cookies[:search_params] = {
+    cookies[:search_params1] = {
       :value => @search.search_params.to_json,
       :domain => (request.domain if request.domain.include?('.'))
     }
