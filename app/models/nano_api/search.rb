@@ -40,7 +40,6 @@ module NanoApi
       end
 
       define_method "#{name}_name_default" do
-        pp caller
         variable = "@#{name}_name_default"
         if instance_variable_defined?(variable)
           instance_variable_get(variable).presence || send("#{name}_iata")
@@ -69,10 +68,13 @@ module NanoApi
     end
 
     def search_params
-      {:params_attributes => attributes_for_cookies.slice(
-        'origin', 'destination', 'depart_date', 'return_date',
-        'range', 'adults', 'children', 'infants', 'trip_class'
-      )}
+      {
+        :params_attributes =>
+          Hash[['origin', 'destination', 'depart_date', 'return_date',
+          'range', 'adults', 'children', 'infants', 'trip_class'].map do |name|
+            [name, send(name)]
+          end]
+      }
     end
 
     def self.find id
