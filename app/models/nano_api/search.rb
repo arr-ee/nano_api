@@ -5,9 +5,9 @@ module NanoApi
     include NanoApi::Model
 
     attribute :origin_iata
-    attribute :origin_name, &:default_origin_name
+    attribute :origin_name, &:origin_name_default
     attribute :destination_iata
-    attribute :destination_name, &:default_destination_name
+    attribute :destination_name, &:destination_name_default
     attribute(:depart_date, type: Date){Date.current + 2.weeks}
     attribute(:return_date, type: Date){Date.current + 3.weeks}
     attribute :range, type: Boolean, default: false
@@ -39,8 +39,14 @@ module NanoApi
         end
       end
 
-      define_method "default_#{name}_name" do
-        send "#{name}_iata"
+      define_method "#{name}_name_default" do
+        variable = "@#{name}_name_default"
+        if instance_variable_defined?(variable)
+          instance_variable_get(variable).presence || send("#{name}_iata")
+        else
+          instance_variable_set(variable, send("#{name}_iata"))
+          send("#{name}_name_default")
+        end
       end
     end
 
