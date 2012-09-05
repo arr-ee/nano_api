@@ -6,7 +6,7 @@ module NanoApi
     end
 
     def client
-      Thread.current[:client]
+      Thread.current[:client] || NanoApi::Client.new
     end
 
     def config

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NanoApi::Search do
+describe NanoApi::Feedback do
 
   describe '.save' do
     let(:feedback){ Fabricate :nano_api_feedback }
