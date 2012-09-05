@@ -13,7 +13,7 @@ module NanoApi
 
     def save
       NanoApi.client.send :post_raw, 'subscribers',
-        { 'subscriber' => to_params }, { :signature => email }
+        { 'subscriber' => to_params }, { :signature => email } if valid?
     rescue RestClient::BadRequest
       false
     ensure
