@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe NanoApi::Search do
+  let(:search){Fabricate :nano_api_search}
+  subject { search }
 
   describe '.origin=' do
-    let(:search){Fabricate :nano_api_search}
 
     context 'hash value' do
       before{search.origin = {name: 'Foo', iata: 'Bar'}}
@@ -18,8 +19,6 @@ describe NanoApi::Search do
   end
 
   describe '.destination=' do
-    let(:search){Fabricate :nano_api_search}
-
     context 'hash value' do
       before{search.destination = {name: 'Foo', iata: 'Bar'}}
       specify{search.destination_name.should == 'London'}
@@ -34,7 +33,6 @@ describe NanoApi::Search do
 
   describe 'names defaults' do
     let(:search) { Fabricate :nano_api_search_iatas }
-    subject { search }
 
     context do
       its(:origin_name){ should == search.origin_iata }
@@ -45,6 +43,22 @@ describe NanoApi::Search do
       before { search.update_attributes(origin_name: 'London', destination_name: 'Moscow') }
       its(:origin_name){ should == 'London' }
       its(:destination_name){ should == 'Moscow' }
+    end
+  end
+
+  describe 'names defaults' do
+    let(:search) { Fabricate :nano_api_search_iatas }
+
+    context do
+      before do
+        FakeWeb.register_uri(:get,
+          NanoApi.config.data_server + "/api/places?code=#{search.destination_iata}&locale=#{I18n.locale}",
+          body: "[{\"_type\": \"City\", \"code\": \"#{search.destination_iata}\", \"name\": \"London1\"}]"
+        )
+      end
+
+      its(:origin_name){ should == search.origin_iata }
+      its(:destination_name){ should == 'London1' }
     end
   end
 
