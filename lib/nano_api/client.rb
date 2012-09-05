@@ -12,6 +12,7 @@ module NanoApi
     include NanoApi::Client::MinimalPrices
     include NanoApi::Client::Airlines
     include NanoApi::Client::UiEvents
+    include NanoApi::Client::Overmind
 
     attr_reader :controller
     delegate :request, :session, to: :controller, allow_nil: true

@@ -40,11 +40,13 @@ module NanoApi
       end
 
       define_method "#{name}_name_default" do
+        pp caller
         variable = "@#{name}_name_default"
         if instance_variable_defined?(variable)
           instance_variable_get(variable).presence || send("#{name}_iata")
         else
-          instance_variable_set(variable, send("#{name}_iata"))
+          instance_variable_set(variable,
+            JSON.parse(NanoApi.client.place(send("#{name}_iata"))).first.try(:[], 'name'))
           send("#{name}_name_default")
         end
       end
@@ -67,7 +69,7 @@ module NanoApi
     end
 
     def search_params
-      {:search_params => attributes_for_cookies.slice(
+      {:params_attributes => attributes_for_cookies.slice(
         'origin', 'destination', 'depart_date', 'return_date',
         'range', 'adults', 'children', 'infants', 'trip_class'
       )}
