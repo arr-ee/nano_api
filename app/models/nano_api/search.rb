@@ -50,7 +50,6 @@ module NanoApi
         if instance_variable_defined?(variable)
           instance_variable_get(variable).presence || send("#{name}_iata")
         else
-          p NanoApi.client.place(send("#{name}_iata"))
           instance_variable_set(variable,
             JSON.parse(NanoApi.client.place(send("#{name}_iata"))).first.try(:[], 'name'))
           send("#{name}_name_default")
