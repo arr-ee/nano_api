@@ -39,11 +39,18 @@ module NanoApi
         end
       end
 
+      define_method "#{name}_iata=" do |value|
+        variable = "@#{name}_name_default"
+        remove_instance_variable variable if instance_variable_defined? variable
+        write_attribute "#{name}_iata", value
+      end
+
       define_method "#{name}_name_default" do
         variable = "@#{name}_name_default"
         if instance_variable_defined?(variable)
           instance_variable_get(variable).presence || send("#{name}_iata")
         else
+          p NanoApi.client.place(send("#{name}_iata"))
           instance_variable_set(variable,
             JSON.parse(NanoApi.client.place(send("#{name}_iata"))).first.try(:[], 'name'))
           send("#{name}_name_default")
