@@ -106,11 +106,22 @@ module NanoApi
         self.attributes = attributes
       end
 
+      def reverse_update_attributes attributes
+        reverse_assign_attributes(attributes)
+      end
+
     private
 
       def assign_attributes attributes
         (attributes.presence || {}).each do |(name, value)|
           send("#{name}=", value) if respond_to?("#{name}=")
+        end
+        self.attributes
+      end
+
+      def reverse_assign_attributes attributes
+        (attributes.presence || {}).each do |(name, value)|
+          send("#{name}=", value) if respond_to?("#{name}=") && respond_to?(name) && send(name).blank?
         end
         self.attributes
       end
