@@ -1,4 +1,4 @@
-<% if 'get' == @click_form[:method] and @click_form[:params].empty? %>
+<% if 'get' == @click_form[:method] and @click_form[:params].blank? %>
   <script type="text/javascript">
     window.location.href = '<%=raw @click_form[:url] %>';
   </script>

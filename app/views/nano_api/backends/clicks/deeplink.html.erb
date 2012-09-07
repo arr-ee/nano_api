@@ -1,4 +1,4 @@
-<% if 'get' == @deeplink_params[:method] and @deeplink_params[:params].empty? %>
+<% if 'get' == @deeplink_params[:method] and @deeplink_params[:params].blank? %>
   <script type="text/javascript">
     window.location.href = '<%=raw @deeplink_params[:url] %>';
   </script>
