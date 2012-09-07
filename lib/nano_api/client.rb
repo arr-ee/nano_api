@@ -5,6 +5,7 @@ require 'digest/md5'
 module NanoApi
   class Client
     AFFILIATE_MARKER_PATTERN = /\A\d{5}/
+    MAPPING = {:'zh-CN' => :cn}
 
     include NanoApi::Client::Search
     include NanoApi::Client::Click
@@ -58,7 +59,7 @@ module NanoApi
 
     def perform method, path, params = {}, options = {}
       options.reverse_merge!(parse: true)
-      params.reverse_merge!(locale: I18n.locale)
+      params.reverse_merge!(locale: MAPPING[I18n.locale] || I18n.locale)
       path += '.json'
 
       headers = {}
