@@ -6,6 +6,7 @@ module NanoApi
       included do
         helper_method :marker
         prepend_before_filter :handle_marker
+        before_filter :redirect_marker
       end
 
       def marker
@@ -24,8 +25,16 @@ module NanoApi
             :expires => 30.days.from_now
           }
         end
+      end
 
-        _marker_redirect
+      def redirect_marker
+        if request.get? && params[:marker].present? || params[:ref].present?
+          # TODO: Passing just params.except(:ref, :marker) works too, but as of rspec-rails 2.11.0 fails at testing with anonymous controller
+          redirect_to([
+            request.path_info,
+            request.query_parameters.except(:ref, :marker).to_query
+          ].delete_if(&:blank?).join('?'), status: 301)
+        end
       end
 
       def _new_marker?(marker)
@@ -34,16 +43,6 @@ module NanoApi
 
       def _affiliate_marker?(marker)
         NanoApi::Client.affiliate_marker?(marker)
-      end
-
-      def _marker_redirect
-        if request.get? && params[:marker].present? || params[:ref].present?
-          # TODO: Passing just params.except(:ref, :marker) works too, but as of rspec-rails 2.11.0 fails at testing with anonymous controller
-          redirect_to([
-            request.path_info,
-            request.query_parameters.except(:ref, :marker).to_query
-          ].delete_if(&:blank?).join('?'), status: 301)
-        end
       end
 
     end
