@@ -4,8 +4,35 @@ describe NanoApi::Search do
   let(:search){Fabricate :nano_api_search}
   subject { search }
 
-  describe '.origin=' do
+  [:origin, :destination].each do |place|
+    describe ".#{place}" do
+      context do
+        before{
+          search.send("#{place}_name=", 'Foo')
+          search.send("#{place}_iata=", 'Bar')
+        }
+        specify{search.send(place).should == {name: 'Foo', iata: 'Bar'}}
+      end
 
+      context do
+        before{
+          search.send("#{place}_name=", 'Foo')
+          search.send("#{place}_iata=", nil)
+        }
+        specify{search.send(place).should == {name: 'Foo'}}
+      end
+
+      context do
+        before{
+          search.send("#{place}_name=", nil)
+          search.send("#{place}_iata=", 'Bar')
+        }
+        specify{search.send(place).should == {name: 'Bar', iata: 'Bar'}}
+      end
+    end
+  end
+
+  describe '.origin=' do
     context 'hash value' do
       before{search.origin = {name: 'Foo', iata: 'Bar'}}
       specify{search.origin_name.should == 'Moscow'}

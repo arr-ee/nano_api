@@ -27,8 +27,8 @@ module NanoApi
     [:origin, :destination].each do |name|
       define_method name do
         {}.tap do |place|
-          place.merge(:name => send("#{name}_name")) if send("#{name}_name").present?
-          place.merge(:iata => send("#{name}_iata")) if send("#{name}_iata").present?
+          place.merge!(:name => send("#{name}_name")) if send("#{name}_name").present?
+          place.merge!(:iata => send("#{name}_iata")) if send("#{name}_iata").present?
         end
       end
 
