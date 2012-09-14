@@ -29,7 +29,7 @@ class NanoApi::Backends::ClicksController < NanoApi::ApplicationController
 
 private
 
-  def _uniq_click? scope, gate_id = nil
+  def _uniq_click? scope, gate_id = _gate_id
     name = :"uc#{scope}#{gate_id}"
     clicked = cookies[name].present?
     cookies[name] = {
@@ -37,6 +37,10 @@ private
       :expires => 1.day.from_now
     } unless clicked
     clicked ? '0' : '1'
+  end
+
+  def _gate_id
+    params[:gate_id]
   end
 
 end
