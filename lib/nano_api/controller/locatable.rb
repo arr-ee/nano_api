@@ -10,7 +10,8 @@ module NanoApi
       private
 
       def user_location
-        session[:user_location] ||= NanoApi.client.geoip(request.remote_ip) rescue nil
+        session[:user_location] ||= NanoApi.client.geoip(request.remote_ip) rescue nil unless request.local?
+        session[:user_location]
       end
 
       def user_location_attributes
