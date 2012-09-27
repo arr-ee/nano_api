@@ -3,7 +3,8 @@ require 'spec_helper'
 describe NanoApi::Client do
   let(:rest_client) { NanoApi::Client.send(:site) }
   let(:fake) { %r{^#{URI.join(NanoApi.config.search_server, path)}} }
-  let(:controller) { mock(marker: 'test', request: mock(host: 'test.com', session: {}, env: {}, remote_ip: '127.1.1.1')) }
+  let(:controller) { mock(marker: 'test', session: {}, request:
+    mock(host: 'test.com', env: {}, remote_ip: '127.1.1.1')) }
   subject { NanoApi::Client.new controller }
 
 

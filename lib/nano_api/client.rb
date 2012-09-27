@@ -66,8 +66,11 @@ module NanoApi
       if request
         params.reverse_merge!(user_ip: request.remote_ip) if request.remote_ip.present?
         headers[:accept_language] = request.env['HTTP_ACCEPT_LANGUAGE']
-        headers[:referer] = request.session[:referer] if request.session[:referer]
-        headers[:landing_page] = request.session[:landing_page] if request.session[:landing_page]
+        if session[:current_referer]
+          headers[:referer] = session[:current_referer][:referer]
+          headers[:x_landing_page] = session[:current_referer][:landing_page]
+          headers[:x_search_count] = session[:current_referer][:search_count]
+        end
       end
 
       params[:signature] = signature(params[:marker], options[:signature]) if options[:signature]

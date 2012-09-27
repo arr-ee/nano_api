@@ -96,18 +96,39 @@ describe NanoApi::SearchesController do
   describe 'POST :create' do
     before do
       NanoApi::Client.any_instance.stub(:search).and_return('{tickets: [{test: 1}, {test: 2}]}')
-      post :create, use_route: :nano_api
     end
 
-    it 'should be success' do
-      response.content_type.should == Mime::JSON
-      response.should be_success
-      response.body.should == '{tickets: [{test: 1}, {test: 2}]}'
+    context do
+      before do
+        post :create, use_route: :nano_api
+      end
+
+      it 'should be success' do
+        response.content_type.should == Mime::JSON
+        response.should be_success
+        response.body.should == '{tickets: [{test: 1}, {test: 2}]}'
+      end
+
+      specify{cookies[:search_params].should == assigns[:search].search_params.to_json}
     end
 
-    specify{cookies[:search_params].should == assigns[:search].search_params.to_json}
+    context do
+      it 'should increment current referrer searches count' do
+        request.env['HTTP_REFERER'] = 'http://ya.ru'
+        get :new, { use_route: :nano_api }
+        session[:current_referer][:search_count].should == 0
 
-    it 'should pass params to api call'
-    it 'should return json received from api'
+        post :create, use_route: :nano_api
+        session[:current_referer][:search_count].should == 1
+
+        request.env['HTTP_REFERER'] = 'http://ya.ru'
+        post :create, use_route: :nano_api
+        session[:current_referer][:search_count].should == 2
+
+        request.env['HTTP_REFERER'] = 'http://google.com'
+        post :create, use_route: :nano_api
+        session[:current_referer][:search_count].should == 1
+      end
+    end
   end
 end
