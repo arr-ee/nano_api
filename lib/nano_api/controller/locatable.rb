@@ -10,7 +10,9 @@ module NanoApi
       private
 
       def user_location
-        session[:user_location] ||= NanoApi.client.geoip(request.remote_ip) rescue nil unless request.local?
+        unless request.local? || request.remote_ip =~ /^(172\.(1[7-9]|2\d|3[01])\.|10\.|192\.168\.)/ # Private IP addresses
+          session[:user_location] ||= NanoApi.client.geoip(request.remote_ip) rescue nil
+        end
         session[:user_location]
       end
 
