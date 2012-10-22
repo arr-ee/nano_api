@@ -1,6 +1,6 @@
 <% if 'get' == @click_params[:method] and @click_params[:params].blank? %>
   <script type="text/javascript">
-    window.location.href = '<%= j @click_params[:url] %>';
+    window.location.href = '<%= raw @click_params[:url] %>';
   </script>
 <% else %>
   <%= render 'form', form: @click_params %>

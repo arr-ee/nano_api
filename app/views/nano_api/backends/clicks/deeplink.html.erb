@@ -1,6 +1,6 @@
 <% if 'get' == @deeplink_params[:method] and @deeplink_params[:params].blank? %>
   <script type="text/javascript">
-    window.location.href = '<%= j @deeplink_params[:url] %>';
+    window.location.href = '<%= raw @deeplink_params[:url] %>';
   </script>
 <% else %>
   <%= render 'form', form: @deeplink_params %>
