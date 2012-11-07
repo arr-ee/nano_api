@@ -1,3 +1,4 @@
+# encoding: UTF-8
 module NanoApi
   module Model
     module Extensions
@@ -15,6 +16,10 @@ module NanoApi
 
           def smart_parse date_or_string, fallback = nil
             fallback_value = fallback.respond_to?(:call) ? fallback.call : fallback
+            if date_or_string.is_a?(String) && match = date_or_string.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/)
+              date_or_string = [match[3], match[2], match[1]].join ?/
+            end
+
             date = case date_or_string
                    when String
                      string = date_or_string.strip.gsub(/\s+/, '.').mb_chars.downcase
