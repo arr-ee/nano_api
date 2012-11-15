@@ -26,14 +26,11 @@ module NanoApi
                      begin
                        string.to_date
                      rescue TypeError, NoMethodError
-                       I18n.t('date.month_names').each_with_index do |month, index|
-                         next if month.nil?
-                         if string.include?(month)
-                           string.gsub!(month, index.to_s.rjust(2, '0'))
-                         end
+                       I18n.t('date.month_names')[1..-1].each_with_index do |month, index|
+                         string.gsub!(month.downcase, (index + 1).to_s)
                        end
 
-                       string.gsub(/ /, '-').to_date rescue fallback_value
+                       string.to_date rescue fallback_value
                      end
                    else
                      date_or_string
