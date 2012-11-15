@@ -33,7 +33,7 @@ module NanoApi
                          end
                        end
 
-                       string.to_date rescue fallback_value
+                       string.gsub(/ /, '-').to_date rescue fallback_value
                      end
                    else
                      date_or_string
