@@ -16,8 +16,8 @@ describe NanoApi::ClicksController do
         response.should be_success
         response.body
         response.should render_template(:show)
-        response.body.should have_selector('form[method=post][action="http://test.com"]')
-        response.body.should have_selector('input[type=hidden][name=test][value=test_value]')
+        expect(response.body).to have_selector('form[method=post][action="http://test.com"]')
+        expect(response.body).to have_selector('input[type=hidden][name=test][value=test_value]')
       end
     end
 

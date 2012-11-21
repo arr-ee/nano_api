@@ -38,7 +38,7 @@ module NanoApi
           send "#{name}_name=", data[:name] if !send("#{name}_name?") && data.key?(:name)
           send "#{name}_iata=", data[:iata] if !send("#{name}_iata?") && data.key?(:iata)
         else
-          send "#{name}_iata=", data
+          send "#{name}_name=", data
         end
       end
 
