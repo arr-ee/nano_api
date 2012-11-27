@@ -1,3 +1,5 @@
+require "addressable/uri"
+
 module NanoApi
   module Controller
     module Referrerable
@@ -24,7 +26,7 @@ module NanoApi
       end
 
       def _extract_domain uri, tld_length = 1
-        uri = URI.parse uri.to_s unless uri.is_a? URI
+        uri = Addressable::URI.parse uri.to_s unless uri.is_a? Addressable::URI
         ActionDispatch::Http::URL.extract_domain(uri.host, tld_length).presence
       end
     end
