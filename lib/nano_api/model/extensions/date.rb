@@ -16,8 +16,12 @@ module NanoApi
 
           def smart_parse date_or_string, fallback = nil
             fallback_value = fallback.respond_to?(:call) ? fallback.call : fallback
-            if date_or_string.is_a?(String) && match = date_or_string.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/)
-              date_or_string = [match[3], match[2], match[1]].join ?/
+            if date_or_string.is_a?(String)
+              if match = date_or_string.match(/(\d{1,2})\.(\d{1,2})\.(\d{2})/)
+                date_or_string = [match[1], match[2], match[3].to_i + 2000].join ?/
+              elsif match = date_or_string.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/)
+                date_or_string = [match[3], match[2], match[1]].join ?/
+              end
             end
 
             date = case date_or_string

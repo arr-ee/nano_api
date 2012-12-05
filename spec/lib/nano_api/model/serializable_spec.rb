@@ -12,6 +12,7 @@ describe NanoApi::Model::Serializable do
       attribute :integer, type: Integer
       attribute :boolean, type: Boolean
       attribute :array, type: Array
+      attribute :date, type: Date
 
       def initialize name = nil
         @attributes = self.class.initialize_attributes
@@ -55,6 +56,14 @@ describe NanoApi::Model::Serializable do
     specify{subject.tap{|s| s.array = [1, 2, 3]}.array.should == [1, 2, 3]}
     specify{subject.tap{|s| s.array = 'hello, world'}.array.should == ['hello', 'world']}
     specify{subject.tap{|s| s.array = 10}.array.should == nil}
+  end
+
+  context 'date' do
+    specify{subject.tap{|s| s.date = '2012年9月15日'}.date.to_s.should == '2012-09-15'}
+    specify{subject.tap{|s| s.date = '15.9.12'}.date.to_s.should == '2012-09-15'}
+    specify{subject.tap{|s| s.date = '2012-09-15'}.date.to_s.should == '2012-09-15'}
+    specify{subject.tap{|s| s.date = '2012/09/15'}.date.to_s.should == '2012-09-15'}
+    specify{subject.tap{|s| s.date = '15 September 2012'}.date.to_s.should == '2012-09-15'}
   end
 
 end
