@@ -16,11 +16,15 @@ module NanoApi
     include NanoApi::Client::Overmind
 
     attr_reader :controller
-    delegate :request, :session, to: :controller, allow_nil: true
+    delegate :request, :session, :marker, to: :controller, allow_nil: true
     delegate :site, :signature, to: 'self.class'
 
     def initialize controller = nil
       @controller = controller
+    end
+
+    def affilate?
+      self.class.affiliate_marker? marker
     end
 
     def self.site
