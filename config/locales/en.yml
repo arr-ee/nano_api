@@ -14,3 +14,9 @@ en:
     clicks:
       new:
         title: Redirect to partner site.
+    searches:
+      helpers:
+        trip_classes:
+          economy_upcase: Economy
+          business_upcase: Business
+          first_upcase: First
