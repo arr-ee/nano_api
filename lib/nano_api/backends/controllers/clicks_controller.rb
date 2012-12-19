@@ -1,14 +1,11 @@
 class NanoApi::Backends::ClicksController < NanoApi::ApplicationController
-  def new
-    ActiveSupport::Deprecation.warn('Use `show` action, Luke.')
-    show
-  end
+  respond_to :html, :js
 
   def show
     if @click_form = NanoApi::Client.click(params[:search_id], params[:id] || params[:url_id])
-      render 'show', stream: true
+      render
     else
-      redirect_to new_search_url
+      render nothing: true, status: :not_found
     end
   end
 

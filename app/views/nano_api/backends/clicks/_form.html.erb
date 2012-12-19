@@ -1,0 +1,5 @@
+<%= form_tag form[:url], method: form[:method], id: 'nano_api_click_form' do %>
+  <% (form[:params] || {}).each do |key, value| %>
+    <%= hidden_field_tag key, h(value) %>
+  <% end %>
+<% end %>

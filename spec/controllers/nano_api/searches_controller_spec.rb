@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe NanoApi::SearchesController do
+  before{@routes = NanoApi::Engine.routes}
+
   describe 'GET :new' do
     let!(:geoip_data){{iata: 'MOW', name: 'Moscow'}}
     before{NanoApi::Client.stub(:geoip).and_return(geoip_data)}
